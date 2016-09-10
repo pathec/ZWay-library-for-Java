@@ -1,0 +1,8 @@
+Lists of 7 third-party dependencies.
+     (The Apache Software License, Version 2.0) Gson (com.google.code.gson:gson:2.4 - https://github.com/google/gson)
+     (Apache License, Version 2.0) Apache Commons Lang (org.apache.commons:commons-lang3:3.4 - http://commons.apache.org/proper/commons-lang/)
+     (Apache Software License - Version 2.0) (Eclipse Public License - Version 1.0) Jetty :: Asynchronous HTTP Client (org.eclipse.jetty:jetty-client:9.3.11.v20160721 - http://www.eclipse.org/jetty)
+     (Apache Software License - Version 2.0) (Eclipse Public License - Version 1.0) Jetty :: Http Utility (org.eclipse.jetty:jetty-http:9.3.11.v20160721 - http://www.eclipse.org/jetty)
+     (Apache Software License - Version 2.0) (Eclipse Public License - Version 1.0) Jetty :: IO Utility (org.eclipse.jetty:jetty-io:9.3.11.v20160721 - http://www.eclipse.org/jetty)
+     (Apache Software License - Version 2.0) (Eclipse Public License - Version 1.0) Jetty :: Utilities (org.eclipse.jetty:jetty-util:9.3.11.v20160721 - http://www.eclipse.org/jetty)
+     (MIT License) SLF4J API Module (org.slf4j:slf4j-api:1.7.21 - http://www.slf4j.org)

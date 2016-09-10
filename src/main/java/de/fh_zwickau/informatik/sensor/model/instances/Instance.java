@@ -1,0 +1,117 @@
+/**
+ * Copyright (C) 2016 by Software-Systementwicklung Zwickau Research Group
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
+package de.fh_zwickau.informatik.sensor.model.instances;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * The {@link Instance} represents a instance. See also:
+ * http://docs.zwayhomeautomation.apiary.io/#
+ *
+ * @author Patrick Hecker - Initial contribution
+ */
+public abstract class Instance {
+    @SerializedName("instanceId")
+    private String mInstanceId;
+    @SerializedName("moduleId")
+    private String mModuleId;
+    @SerializedName("active")
+    private Boolean mActive;
+    @SerializedName("title")
+    private String mTitle;
+    @SerializedName("id")
+    private Integer mId;
+    @SerializedName("creationTime")
+    private Integer mCreationTime;
+    @SerializedName("module")
+    private String mModule;
+
+    /**
+     * Instantiate a instance with default values.
+     */
+    public Instance() {
+        mInstanceId = "";
+        mModuleId = "";
+        mActive = true;
+        mTitle = "";
+        mId = -1;
+        mCreationTime = -1;
+        mModule = "";
+    }
+
+    public String getInstanceId() {
+        return mInstanceId;
+    }
+
+    public void setInstanceId(String instanceId) {
+        this.mInstanceId = instanceId;
+    }
+
+    public String getModuleId() {
+        return mModuleId;
+    }
+
+    public void setModuleId(String moduleId) {
+        this.mModuleId = moduleId;
+    }
+
+    public Boolean getActive() {
+        return mActive;
+    }
+
+    public void setActive(Boolean active) {
+        this.mActive = active;
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String title) {
+        this.mTitle = title;
+    }
+
+    public Integer getId() {
+        return mId;
+    }
+
+    public void setId(Integer id) {
+        this.mId = id;
+    }
+
+    public Integer getCreationTime() {
+        return mCreationTime;
+    }
+
+    public void setCreationTime(Integer creationTime) {
+        this.mCreationTime = creationTime;
+    }
+
+    public String getModule() {
+        return mModule;
+    }
+
+    public void setModule(String module) {
+        this.mModule = module;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append("instanceId", mInstanceId).append("moduleId", mModuleId)
+                .append("active", mActive).append("title", mTitle).append("id", mId)
+                .append("creationTime", mCreationTime).append("module", mModule).toString();
+    }
+}
