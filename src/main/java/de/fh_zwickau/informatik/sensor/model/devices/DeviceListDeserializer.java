@@ -23,9 +23,10 @@ import de.fh_zwickau.informatik.sensor.model.devices.types.SensorMultilevel;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchBinary;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchControl;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchMultilevel;
-import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchMultilevelBlinds;
+import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchRGBW;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchToggle;
 import de.fh_zwickau.informatik.sensor.model.devices.types.Thermostat;
+import de.fh_zwickau.informatik.sensor.model.devices.types.ToggleButton;
 
 /**
  * The {@link DeviceListDeserializer} build a device list with known, concrete devices based on JSON data. See also:
@@ -65,9 +66,6 @@ public class DeviceListDeserializer {
                 case ZWayConstants.DEVICE_TYPE_SWITCH_MULTILEVEL:
                     device = gson.fromJson(deviceAsJson, SwitchMultilevel.class);
                     break;
-                case ZWayConstants.DEVICE_TYPE_SWITCH_MULTILEVEL_BLINDS:
-                    device = gson.fromJson(deviceAsJson, SwitchMultilevelBlinds.class);
-                    break;
                 case ZWayConstants.DEVICE_TYPE_SENSOR_BINARY:
                     device = gson.fromJson(deviceAsJson, SensorBinary.class);
                     break;
@@ -77,8 +75,14 @@ public class DeviceListDeserializer {
                 case ZWayConstants.DEVICE_TYPE_SWITCH_TOGGLE:
                     device = gson.fromJson(deviceAsJson, SwitchToggle.class);
                     break;
+                case ZWayConstants.DEVICE_TYPE_SWITCH_RGBW:
+                    device = gson.fromJson(deviceAsJson, SwitchRGBW.class);
+                    break;
                 case ZWayConstants.DEVICE_TYPE_SWITCH_CONTROL:
                     device = gson.fromJson(deviceAsJson, SwitchControl.class);
+                    break;
+                case ZWayConstants.DEVICE_TYPE_TOGGLE_BUTTON:
+                    device = gson.fromJson(deviceAsJson, ToggleButton.class);
                     break;
                 default:
                     logger.warn("Unknown device type: " + deviceType);

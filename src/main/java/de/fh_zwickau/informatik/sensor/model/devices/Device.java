@@ -242,6 +242,14 @@ public abstract class Device {
         throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
     }
 
+    public String exactSmooth(String level, Integer duration) {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
+    public String exact(Integer red, Integer green, Integer blue) {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
     public String up() {
         throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
     }
@@ -279,6 +287,30 @@ public abstract class Device {
     }
 
     public String setMode(String mode) {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
+    public String increase() {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
+    public String decrease() {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
+    public String upstart() {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
+    public String upstop() {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
+    public String downstart() {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
+    public String downstop() {
         throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
     }
 

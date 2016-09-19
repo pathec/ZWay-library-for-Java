@@ -28,13 +28,38 @@ public class SwitchControl extends Device {
     }
 
     @Override
+    public String exact(String level) {
+        return mCommandHandler.exact(this, level);
+    }
+
+    @Override
+    public String upstart() {
+        return mCommandHandler.upstart(this);
+    }
+
+    @Override
+    public String upstop() {
+        return mCommandHandler.upstop(this);
+    }
+
+    @Override
+    public String downstart() {
+        return mCommandHandler.downstart(this);
+    }
+
+    @Override
+    public String downstop() {
+        return mCommandHandler.downstop(this);
+    }
+
+    @Override
     public String update() {
         return mCommandHandler.update(this);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.model.devices.Device#toString()
      */
     @Override

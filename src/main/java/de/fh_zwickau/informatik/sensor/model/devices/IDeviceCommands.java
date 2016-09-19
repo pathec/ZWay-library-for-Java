@@ -27,6 +27,10 @@ public interface IDeviceCommands {
 
     String exact(Device device, String level);
 
+    String exactSmooth(Device device, String level, Integer duration);
+
+    String exact(Device device, Integer red, Integer green, Integer blue);
+
     String up(Device device);
 
     String down(Device device);
@@ -46,4 +50,16 @@ public interface IDeviceCommands {
     String setTemp(Device device, Double temp);
 
     String setMode(Device device, String mode);
+
+    String increase(Device device);
+
+    String decrease(Device device);
+
+    String upstart(Device device);
+
+    String upstop(Device device);
+
+    String downstart(Device device);
+
+    String downstop(Device device);
 }

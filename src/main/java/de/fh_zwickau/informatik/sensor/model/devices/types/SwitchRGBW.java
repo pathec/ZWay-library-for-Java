@@ -11,16 +11,25 @@ package de.fh_zwickau.informatik.sensor.model.devices.types;
 import de.fh_zwickau.informatik.sensor.model.devices.Device;
 
 /**
- * The {@link Battery} represents a battery from ZAutomation API. See also:
+ * The {@link SwitchRGBW} represents a color switch from ZAutomation API. See also:
  * http://docs.zwayhomeautomation.apiary.io/#
  *
  * @author Patrick Hecker - Initial contribution
  */
-public class Battery extends Device {
+public class SwitchRGBW extends Device {
+    @Override
+    public String on() {
+        return mCommandHandler.on(this);
+    }
 
     @Override
-    public String update() {
-        return mCommandHandler.update(this);
+    public String off() {
+        return mCommandHandler.off(this);
+    }
+
+    @Override
+    public String exact(Integer red, Integer green, Integer blue) {
+        return mCommandHandler.exact(this, red, green, blue);
     }
 
     /*
@@ -30,6 +39,6 @@ public class Battery extends Device {
      */
     @Override
     public String toString() {
-        return "Battery [ " + super.toString() + " ]";
+        return "SwitchBinary [ " + super.toString() + " ]";
     }
 }

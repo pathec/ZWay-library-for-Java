@@ -206,6 +206,23 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
+    public String exact(Device device, Integer red, Integer green, Integer blue) {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("red", red.toString());
+        params.put("green", green.toString());
+        params.put("blue", blue.toString());
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "exact", params));
+    }
+
+    @Override
+    public String exactSmooth(Device device, String level, Integer duration) {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("level", level);
+        params.put("duration", duration.toString());
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "exact", params));
+    }
+
+    @Override
     public String up(Device device) {
         return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "up", null));
     }
@@ -257,6 +274,36 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
         Map<String, String> params = new HashMap<String, String>();
         params.put("mode", mode);
         return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "setMode", params));
+    }
+
+    @Override
+    public String increase(Device device) {
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "increase", null));
+    }
+
+    @Override
+    public String decrease(Device device) {
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "decrease", null));
+    }
+
+    @Override
+    public String upstart(Device device) {
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "upstart", null));
+    }
+
+    @Override
+    public String upstop(Device device) {
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "upstop", null));
+    }
+
+    @Override
+    public String downstart(Device device) {
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "downstart", null));
+    }
+
+    @Override
+    public String downstop(Device device) {
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "downstop", null));
     }
 
     /*********************************

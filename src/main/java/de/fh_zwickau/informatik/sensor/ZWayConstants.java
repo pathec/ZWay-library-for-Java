@@ -46,19 +46,76 @@ public class ZWayConstants {
     public static final String ICON_THERMOSTAT = "thermostat";
     public static final String ICON_FAN = "fan";
     public static final String ICON_METER = "meter";
+    public static final String ICON_BLINDS = "blinds";
+    public static final String ICON_TAMPER = "tamper";
+    public static final String ICON_BAROMETER = "barometer";
+    public static final String ICON_ULTRAVIOLET = "ultraviolet";
+    public static final String ICON_ALARM = "alarm";
 
     public static final String PROBE_TYPE_TEMPERATURE = "temperature";
     public static final String PROBE_TYPE_LUMINOSITY = "luminosity";
     public static final String PROBE_TYPE_HUMIDITY = "humidity";
     public static final String PROBE_TYPE_ULTRAVIOLET = "ultraviolet";
     public static final String PROBE_TYPE_GENERAL_PURPOSE = "general_purpose";
-    public static final String PROBE_TYPE_ALARM_BURGLAR = "alarm_burglar";
     public static final String PROBE_TYPE_ENERGY = "energy";
-    // TODO meterElectric_kilowatt_per_hour ignored ... metrics.probeTitle will be used
-    // TODO meterElectric_watt ignored ... metrics.probeTitle will be used
-    // TODO alarmSensor_general_purpose
-    // TODO thermostat_mode
-    // TODO thermostat_set_point
+    public static final String PROBE_TYPE_MOTOR = "motor";
+    public static final String PROBE_TYPE_MULTILEVEL = "multilevel";
+    public static final String PROBE_TYPE_SMOKE = "smoke";
+    public static final String PROBE_TYPE_CO = "co";
+    public static final String PROBE_TYPE_FLOOD = "flood";
+    public static final String PROBE_TYPE_COOLING = "cooling";
+    public static final String PROBE_TYPE_TAMPER = "tamper";
+    public static final String PROBE_TYPE_DOOR_WINDOW = "door-window";
+    public static final String PROBE_TYPE_MOTION = "motion";
+    public static final String PROBE_TYPE_BAROMETER = "barometer";
+
+    public static final String PROBE_TYPE_METER_ELECTRIC_KILOWATT_PER_HOUR = "meterElectric_kilowatt_per_hour";
+    public static final String PROBE_TYPE_METER_ELECTRIC_WATT = "meterElectric_watt";
+    public static final String PROBE_TYPE_METER_ELECTRIC_PULSE_COUNT = "meterElectric_pulse_count";
+    public static final String PROBE_TYPE_METER_ELECTRIC_VOLTAGE = "meterElectric_voltage";
+    public static final String PROBE_TYPE_METER_ELECTRIC_AMPERE = "meterElectric_ampere";
+    public static final String PROBE_TYPE_METER_ELECTRIC_POWER_FACTOR = "meterElectric_power_factor";
+
+    public static final String PROBE_TYPE_BATTERY = "Battery"; // attention! uppercase
+
+    public static final String PROBE_TYPE_ALARM_DOOR = "alarm_door";
+    public static final String PROBE_TYPE_ALARM_SMOKE = "alarm_smoke";
+    public static final String PROBE_TYPE_ALARM_CO = "alarm_co";
+    public static final String PROBE_TYPE_ALARM_COO = "alarm_coo";
+    public static final String PROBE_TYPE_ALARM_HEAT = "alarm_heat";
+    public static final String PROBE_TYPE_ALARM_FLOOD = "alarm_flood";
+    public static final String PROBE_TYPE_ALARM_BURGLAR = "alarm_burglar";
+    public static final String PROBE_TYPE_ALARM_POWER = "alarm_power";
+    public static final String PROBE_TYPE_ALARM_SYSTEM = "alarm_system";
+    public static final String PROBE_TYPE_ALARM_EMERGENCY = "alarm_emergency";
+    public static final String PROBE_TYPE_ALARM_CLOCK = "alarm_clock";
+
+    // probe types for deprecated command class AlarmSensor
+
+    public static final String PROBE_TYPE_ALARM_SENSOR_GENERAL_PURPOSE = "alarmSensor_door";
+    public static final String PROBE_TYPE_ALARM_SENSOR_SMOKE = "alarmSensor_smoke";
+    public static final String PROBE_TYPE_ALARM_SENSOR_CO = "alarmSensor_co";
+    public static final String PROBE_TYPE_ALARM_SENSOR_COO = "alarmSensor_coo";
+    public static final String PROBE_TYPE_ALARM_SENSOR_HEAT = "alarmSensor_heat";
+    public static final String PROBE_TYPE_ALARM_SENSOR_FLOOD = "alarmSensor_flood";
+    public static final String PROBE_TYPE_ALARM_SENSOR_DOOR = "alarmSensor_door";
+    public static final String PROBE_TYPE_ALARM_SENSOR_BURGLAR = "alarmSensor_burglar";
+    public static final String PROBE_TYPE_ALARM_SENSOR_POWER = "alarmSensor_power";
+    public static final String PROBE_TYPE_ALARM_SENSOR_SYSTEM = "alarmSensor_system";
+    public static final String PROBE_TYPE_ALARM_SENSOR_EMERGENCY = "alarmSensor_emergency";
+    public static final String PROBE_TYPE_ALARM_SENSOR_CLOCK = "alarmSensor_clock";
+
+    // end - probe types for deprecated command class AlarmSensor
+
+    public static final String PROBE_TYPE_SWITCH_COLOR_RGB = "switchColor_rgb";
+    public static final String PROBE_TYPE_SWITCH_COLOR_SOFT_WHITE = "switchColor_soft_white";
+    public static final String PROBE_TYPE_SWITCH_COLOR_SOFT_COLD = "switchColor_cold_white";
+    public static final String PROBE_TYPE_SWITCH_COLOR_RED = "switchColor_red";
+    public static final String PROBE_TYPE_SWITCH_COLOR_GREEN = "switchColor_green";
+    public static final String PROBE_TYPE_SWITCH_COLOR_BLUE = "switchColor_blue";
+
+    public static final String PROBE_TYPE_THERMOSTAT_MODE = "thermostat_mode";
+    public static final String PROBE_TYPE_THERMOSTAT_SET_POINT = "thermostat_set_point";
 
     public static final String PROBE_TITLE_BATTERY = "Battery";
     public static final String PROBE_TITLE_GENERAL_PURPOSE = "General purpose";
@@ -67,7 +124,7 @@ public class ZWayConstants {
     public static final String PROBE_TITLE_HUMIDITY = "Humidity";
     public static final String PROBE_TITLE_ULTRAVIOLET = "Ultraviolet";
     public static final String PROBE_TITLE_POWER = "Power";
-    public static final String PROBE_TITLE_ELECTRIC = "Electric"; // ! scaleTitles: W, kWh
+    public static final String PROBE_TITLE_ELECTRIC = "Electric"; // attention! scaleTitles: W, kWh
     public static final String PROBE_TITLE_CO2_LEVEL = "CO2 Level";
 
     public static final String DEVICE_TYPE_BATTERY = "battery";
@@ -75,11 +132,10 @@ public class ZWayConstants {
     public static final String DEVICE_TYPE_THERMOSTAT = "thermostat";
     public static final String DEVICE_TYPE_SWITCH_BINARY = "switchBinary";
     public static final String DEVICE_TYPE_SWITCH_MULTILEVEL = "switchMultilevel";
-    public static final String DEVICE_TYPE_SWITCH_MULTILEVEL_BLINDS = "switchMultilevel(Blinds)"; // TODO
-                                                                                                  // http://docs.zwayhomeautomation.apiary.io/#reference/devices/device
     public static final String DEVICE_TYPE_SENSOR_BINARY = "sensorBinary";
     public static final String DEVICE_TYPE_SENSOR_MULTILEVEL = "sensorMultilevel";
     public static final String DEVICE_TYPE_SWITCH_TOGGLE = "switchToggle";
-
     public static final String DEVICE_TYPE_SWITCH_CONTROL = "switchControl";
+    public static final String DEVICE_TYPE_TOGGLE_BUTTON = "toggleButton";
+    public static final String DEVICE_TYPE_SWITCH_RGBW = "switchRGBW";
 }

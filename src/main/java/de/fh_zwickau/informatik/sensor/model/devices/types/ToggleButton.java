@@ -11,45 +11,20 @@ package de.fh_zwickau.informatik.sensor.model.devices.types;
 import de.fh_zwickau.informatik.sensor.model.devices.Device;
 
 /**
- * The {@link SwitchMultilevelBlinds} represents a switch multilevel (blinds) from ZAutomation API. See also:
+ * The {@link ToggleButton} represents a switch binary from ZAutomation API. See also:
  * http://docs.zwayhomeautomation.apiary.io/#
  *
  * @author Patrick Hecker - Initial contribution
  */
-public class SwitchMultilevelBlinds extends Device {
+public class ToggleButton extends Device {
     @Override
-    public String up() {
-        return mCommandHandler.up(this);
+    public String on() {
+        return mCommandHandler.on(this);
     }
 
     @Override
-    public String down() {
-        return mCommandHandler.down(this);
-    }
-
-    @Override
-    public String upMax() {
-        return mCommandHandler.upMax(this);
-    }
-
-    @Override
-    public String startUp() {
-        return mCommandHandler.startUp(this);
-    }
-
-    @Override
-    public String startDown() {
-        return mCommandHandler.startDown(this);
-    }
-
-    @Override
-    public String stop() {
-        return mCommandHandler.stop(this);
-    }
-
-    @Override
-    public String update() {
-        return mCommandHandler.update(this);
+    public String off() {
+        return mCommandHandler.off(this);
     }
 
     @Override
@@ -57,13 +32,38 @@ public class SwitchMultilevelBlinds extends Device {
         return mCommandHandler.exact(this, level);
     }
 
+    @Override
+    public String upstart() {
+        return mCommandHandler.upstart(this);
+    }
+
+    @Override
+    public String upstop() {
+        return mCommandHandler.upstop(this);
+    }
+
+    @Override
+    public String downstart() {
+        return mCommandHandler.downstart(this);
+    }
+
+    @Override
+    public String downstop() {
+        return mCommandHandler.downstop(this);
+    }
+
+    @Override
+    public String update() {
+        return mCommandHandler.update(this);
+    }
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.model.devices.Device#toString()
      */
     @Override
     public String toString() {
-        return "SwitchMultilevelBlinds [ " + super.toString() + " ]";
+        return "SwitchControl [ " + super.toString() + " ]";
     }
 }

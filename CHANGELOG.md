@@ -14,3 +14,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     - GET devices
     - GET device command
     - GET Z-Wave device
+    
+## [0.1.1] - 2016-09-19
+### Changed
+- Command implementation of device types:
+    - Battery
+    - SwitchControl
+    - SwitchMultilevel
+- Device deserializer
+
+### Added
+- Device type SwitchRGBW
+- Device type ToggleButton
+- All possible probe types and icons
+- All possible commands
+
+### Removed
+- Device type SwitchMultilevelBlinds
