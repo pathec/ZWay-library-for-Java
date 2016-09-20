@@ -109,7 +109,7 @@ public class ZWayConstants {
 
     public static final String PROBE_TYPE_SWITCH_COLOR_RGB = "switchColor_rgb";
     public static final String PROBE_TYPE_SWITCH_COLOR_SOFT_WHITE = "switchColor_soft_white";
-    public static final String PROBE_TYPE_SWITCH_COLOR_SOFT_COLD = "switchColor_cold_white";
+    public static final String PROBE_TYPE_SWITCH_COLOR_COLD_WHITE = "switchColor_cold_white";
     public static final String PROBE_TYPE_SWITCH_COLOR_RED = "switchColor_red";
     public static final String PROBE_TYPE_SWITCH_COLOR_GREEN = "switchColor_green";
     public static final String PROBE_TYPE_SWITCH_COLOR_BLUE = "switchColor_blue";
