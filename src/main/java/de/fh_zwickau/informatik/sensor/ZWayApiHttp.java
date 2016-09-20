@@ -81,7 +81,7 @@ public class ZWayApiHttp extends ZWayApiBase {
      * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getLogin()
      */
     @Override
-    public String getLogin() {
+    public synchronized String getLogin() {
         try {
             startHttpClient(httpClient);
 
@@ -133,7 +133,7 @@ public class ZWayApiHttp extends ZWayApiBase {
      * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getInstances()
      */
     @Override
-    public InstanceList getInstances() {
+    public synchronized InstanceList getInstances() {
         if (checkLogin()) {
             try {
                 startHttpClient(httpClient);
@@ -215,7 +215,7 @@ public class ZWayApiHttp extends ZWayApiBase {
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
 
-    private InstanceList parseGetInstances(String data) {
+    private synchronized InstanceList parseGetInstances(String data) {
         // Request performed successfully: load response body
         // Expected response format: { "data": [...] }, ... }
         try {
@@ -237,7 +237,7 @@ public class ZWayApiHttp extends ZWayApiBase {
      * de.fh_zwickau.informatik.sensor.ZWayApiBase#putInstance(de.fh_zwickau.informatik.sensor.model.instances.Instance)
      */
     @Override
-    public Instance putInstance(Instance instance) {
+    public synchronized Instance putInstance(Instance instance) {
         if (checkLogin()) {
             try {
                 startHttpClient(httpClient);
@@ -325,7 +325,7 @@ public class ZWayApiHttp extends ZWayApiBase {
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
 
-    private Instance parsePutInstance(String data) {
+    private synchronized Instance parsePutInstance(String data) {
         // Request performed successfully: load response body
         // Expected response format: { "data": { ... }, "code": 200, "message":
         // "200 - OK", ... }
@@ -347,7 +347,7 @@ public class ZWayApiHttp extends ZWayApiBase {
      * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getDevices()
      */
     @Override
-    public DeviceList getDevices() {
+    public synchronized DeviceList getDevices() {
         if (checkLogin()) {
             try {
                 startHttpClient(httpClient);
@@ -429,7 +429,7 @@ public class ZWayApiHttp extends ZWayApiBase {
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
 
-    private DeviceList parseGetDevices(String data) {
+    private synchronized DeviceList parseGetDevices(String data) {
         // Request performed successfully: load response body
         // Expected response format: { "data": { "devices": [...], ... }, ... }
         try {
@@ -453,7 +453,7 @@ public class ZWayApiHttp extends ZWayApiBase {
      * DeviceCommand)
      */
     @Override
-    public String getDeviceCommand(DeviceCommand command) {
+    public synchronized String getDeviceCommand(DeviceCommand command) {
         if (checkLogin()) {
             try {
                 startHttpClient(httpClient);
@@ -550,7 +550,7 @@ public class ZWayApiHttp extends ZWayApiBase {
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
 
-    private String buildGetDeviceCommandPath(DeviceCommand command) {
+    private synchronized String buildGetDeviceCommandPath(DeviceCommand command) {
         String path = StringUtils.replace(PATH_DEVICES_COMMAND, "{vDevName}", command.getDeviceId());
         path = StringUtils.replace(path, "{command}", command.getCommand());
 
@@ -576,7 +576,7 @@ public class ZWayApiHttp extends ZWayApiBase {
         return path;
     }
 
-    private String parseGetDeviceCommand(String data) {
+    private synchronized String parseGetDeviceCommand(String data) {
         // Request performed successfully: load response body
         // Expected response format: { "data": { "code": ..., "message": "..." }, "code": 200, "message":
         // "200 - OK", ... }
@@ -603,7 +603,7 @@ public class ZWayApiHttp extends ZWayApiBase {
      * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getZWaveDevice(int)
      */
     @Override
-    public ZWaveDevice getZWaveDevice(int nodeId) {
+    public synchronized ZWaveDevice getZWaveDevice(int nodeId) {
         if (checkLogin()) {
             try {
                 startHttpClient(httpClient);
@@ -692,7 +692,7 @@ public class ZWayApiHttp extends ZWayApiBase {
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
 
-    private ZWaveDevice parseGetZWaveDevice(String data) {
+    private synchronized ZWaveDevice parseGetZWaveDevice(String data) {
         // Request performed successfully: load response body
         // Expected response format: { "data": { "givenName": { "value": *** }, ... }, ... }
         try {
@@ -711,7 +711,7 @@ public class ZWayApiHttp extends ZWayApiBase {
      ****** Utility ******
      ********************/
 
-    private void startHttpClient(HttpClient client) {
+    private synchronized void startHttpClient(HttpClient client) {
         if (!client.isStarted()) {
             try {
                 client.start();
@@ -721,7 +721,7 @@ public class ZWayApiHttp extends ZWayApiBase {
         }
     }
 
-    private void stopHttpClient(HttpClient client) {
+    private synchronized void stopHttpClient(HttpClient client) {
         if (client.isStarted()) {
             try {
                 client.stop();
