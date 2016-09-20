@@ -37,6 +37,14 @@ public class Metrics {
     @SerializedName("modes")
     private List<String> mModes;
 
+    @SerializedName("color")
+    private Color mColor;
+
+    @SerializedName("min")
+    private Integer mMin;
+    @SerializedName("max")
+    private Integer mMax;
+
     /**
      * Instantiate a metrics object with default values.
      */
@@ -48,6 +56,9 @@ public class Metrics {
         mScaleTitle = "";
         mMode = "";
         mModes = new ArrayList<String>();
+        mColor = new Color();
+        mMin = 0;
+        mMax = 0;
     }
 
     public String getIcon() {
@@ -106,6 +117,30 @@ public class Metrics {
         this.mModes = modes;
     }
 
+    public Color getColor() {
+        return mColor;
+    }
+
+    public void setColor(Color color) {
+        this.mColor = color;
+    }
+
+    public Integer getMin() {
+        return mMin;
+    }
+
+    public void setMin(Integer min) {
+        this.mMin = min;
+    }
+
+    public Integer getMax() {
+        return mMax;
+    }
+
+    public void setMax(Integer max) {
+        this.mMax = max;
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -115,6 +150,6 @@ public class Metrics {
     public String toString() {
         return new ToStringBuilder(this).append("icon", mIcon).append("title", mTitle).append("level", mLevel)
                 .append("probeTitle", mProbeTitle).append("scaleTitle", mScaleTitle).append("mode", mMode)
-                .append("modes", mModes).toString();
+                .append("modes", mModes).append("color", mColor).append("min", mMin).append("max", mMax).toString();
     }
 }

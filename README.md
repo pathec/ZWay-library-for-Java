@@ -47,6 +47,20 @@ This project provides a Z-Way library for Java. The offical API description is a
  - `getDevices()` returns a list with virtual devices which don't represent physical devices in Z-Wave network
  - `getDevicesGroupByNodeId()` returns a map (node id, device list) of virtual devices associated with a physical device
 
+## Supported device types
+
+- Battery
+- Doorlock (not tested)
+- SensorBinary
+- SensorMultilevel
+- SwitchBinary
+- SwitchControl
+- SwitchMultilevel
+- SwitchRGBW
+- SwitchToggle (not tested)
+- Thermostat (not tested)
+- ToggleButton
+
 ## Dependencies
 
 - Gson (com.google.code.gson:gson:2.4 - https://github.com/google/gson)
