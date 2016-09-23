@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.HttpResponseException;
 import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.client.api.Request;
 import org.eclipse.jetty.client.api.Request.FailureListener;
@@ -164,8 +165,20 @@ public class ZWayApiHttp extends ZWayApiBase {
                     return parseGetInstances(response.getContentAsString());
                 }
             } catch (Exception e) {
-                logger.warn("Request getInstances() failed: {}", e.getMessage());
-                mCaller.apiError(e.getMessage(), false);
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getInstances();
+                        }
+                    }
+                } else {
+                    logger.warn("Request getInstances() failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
             } finally {
                 stopHttpClient(httpClient);
             }
@@ -211,8 +224,20 @@ public class ZWayApiHttp extends ZWayApiBase {
                     }
                 });
             } catch (Exception e) {
-                logger.warn("Request getLogin(callback) failed: {}", e.getMessage());
-                mCaller.apiError(e.getMessage(), false);
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getInstances(callback);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getLogin(callback) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
             } finally {
                 // do not stop http client for asynchronous call
             }
@@ -273,8 +298,20 @@ public class ZWayApiHttp extends ZWayApiBase {
                     return parsePutInstance(response.getContentAsString());
                 }
             } catch (Exception e) {
-                logger.warn("Request putInstance(instance) failed: {}", e.getMessage());
-                mCaller.apiError(e.getMessage(), false);
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return putInstance(instance);
+                        }
+                    }
+                } else {
+                    logger.warn("Request putInstance(instance) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
             } finally {
                 stopHttpClient(httpClient);
             }
@@ -324,8 +361,20 @@ public class ZWayApiHttp extends ZWayApiBase {
                     }
                 });
             } catch (Exception e) {
-                logger.warn("Request putInstance(instance, failed) failed: {}", e.getMessage());
-                mCaller.apiError(e.getMessage(), false);
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            putInstance(instance, callback);
+                        }
+                    }
+                } else {
+                    logger.warn("Request putInstance(instance, failed) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
             } finally {
                 // do not stop http client for asynchronous call
             }
@@ -384,8 +433,20 @@ public class ZWayApiHttp extends ZWayApiBase {
                     return parseGetDevices(response.getContentAsString());
                 }
             } catch (Exception e) {
-                logger.warn("Request getDevices() failed: {}", e.getMessage());
-                mCaller.apiError(e.getMessage(), false);
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getDevices();
+                        }
+                    }
+                } else {
+                    logger.warn("Request getDevices() failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
             } finally {
                 stopHttpClient(httpClient);
             }
@@ -431,8 +492,20 @@ public class ZWayApiHttp extends ZWayApiBase {
                     }
                 });
             } catch (Exception e) {
-                logger.warn("Request getDevices(callback) failed: {}", e.getMessage());
-                mCaller.apiError(e.getMessage(), false);
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getDevices(callback);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getDevices(callback) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
             } finally {
                 // do not stop http client for asynchronous call
             }
@@ -499,8 +572,20 @@ public class ZWayApiHttp extends ZWayApiBase {
                             + command.getDeviceId() + " (" + parseGetDeviceCommand(response.getContentAsString()) + ")";
                 }
             } catch (Exception e) {
-                logger.warn("Request getDeviceCommand(command) failed: {}", e.getMessage());
-                mCaller.apiError(e.getMessage(), false);
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getDeviceCommand(command);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getDeviceCommand(command) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
             } finally {
                 stopHttpClient(httpClient);
             }
@@ -555,8 +640,20 @@ public class ZWayApiHttp extends ZWayApiBase {
                     }
                 });
             } catch (Exception e) {
-                logger.warn("Request getDeviceCommand(command, callback) failed: {}", e.getMessage());
-                mCaller.apiError(e.getMessage(), false);
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getDeviceCommand(command, callback);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getDeviceCommand(command, callback) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
             } finally {
                 // do not stop http client for asynchronous call
             }
@@ -650,8 +747,20 @@ public class ZWayApiHttp extends ZWayApiBase {
                     return parseGetZWaveDevice(response.getContentAsString());
                 }
             } catch (Exception e) {
-                logger.warn("Request getZWaveDevice(nodeId) failed: {}", e.getMessage());
-                mCaller.apiError(e.getMessage(), false);
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getZWaveDevice(nodeId);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getZWaveDevice(nodeId) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
             } finally {
                 stopHttpClient(httpClient);
             }
@@ -701,8 +810,20 @@ public class ZWayApiHttp extends ZWayApiBase {
                     }
                 });
             } catch (Exception e) {
-                logger.warn("Request getZWaveDevice(nodeId, callback) failed: {}", e.getMessage());
-                mCaller.apiError(e.getMessage(), false);
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getZWaveDevice(nodeId, callback);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getZWaveDevice(nodeId, callback) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
             } finally {
                 // do not stop http client for asynchronous call
             }
