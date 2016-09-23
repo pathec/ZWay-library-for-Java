@@ -114,9 +114,11 @@ public class ZWayApiHttp extends ZWayApiBase {
                 mCaller.getLoginResponse(mZWaySessionId);
                 return mZWaySessionId;
             } catch (JsonParseException e) {
+                logger.warn("Unexpected response format: {}", e.getMessage());
                 mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
             }
         } catch (Exception e) {
+            logger.warn("Request getLogin() failed: {}", e.getMessage());
             mCaller.apiError(e.getMessage(), false);
         } finally {
             stopHttpClient(httpClient);
@@ -150,7 +152,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                 if (statusCode != HttpStatus.OK_200) {
                     // Authentication error - retry login and operation
                     if (statusCode == HttpStatus.UNAUTHORIZED_401) {
-                        if (getLogin() != null) {
+                        if (getLogin() == null) {
                             mCaller.authenticationError();
                         } else {
                             return getInstances();
@@ -162,6 +164,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     return parseGetInstances(response.getContentAsString());
                 }
             } catch (Exception e) {
+                logger.warn("Request getInstances() failed: {}", e.getMessage());
                 mCaller.apiError(e.getMessage(), false);
             } finally {
                 stopHttpClient(httpClient);
@@ -194,7 +197,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         int statusCode = result.getResponse().getStatus();
                         if (statusCode != HttpStatus.OK_200) {
                             if (statusCode == HttpStatus.UNAUTHORIZED_401) {
-                                if (getLogin() != null) {
+                                if (getLogin() == null) {
                                     mCaller.authenticationError();
                                 } else {
                                     getInstances(callback);
@@ -208,6 +211,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     }
                 });
             } catch (Exception e) {
+                logger.warn("Request getLogin(callback) failed: {}", e.getMessage());
                 mCaller.apiError(e.getMessage(), false);
             } finally {
                 // do not stop http client for asynchronous call
@@ -225,6 +229,7 @@ public class ZWayApiHttp extends ZWayApiBase {
 
             return new InstanceListDeserializer().deserializeInstanceList(instancesAsJson);
         } catch (JsonParseException e) {
+            logger.warn("Unexpected response format: {}", e.getMessage());
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
             return null;
         }
@@ -256,7 +261,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                 if (statusCode != HttpStatus.OK_200) {
                     // Authentication error - retry login and operation
                     if (statusCode == HttpStatus.UNAUTHORIZED_401) {
-                        if (getLogin() != null) {
+                        if (getLogin() == null) {
                             mCaller.authenticationError();
                         } else {
                             return putInstance(instance);
@@ -268,6 +273,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     return parsePutInstance(response.getContentAsString());
                 }
             } catch (Exception e) {
+                logger.warn("Request putInstance(instance) failed: {}", e.getMessage());
                 mCaller.apiError(e.getMessage(), false);
             } finally {
                 stopHttpClient(httpClient);
@@ -304,7 +310,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         int statusCode = result.getResponse().getStatus();
                         if (statusCode != HttpStatus.OK_200) {
                             if (statusCode == HttpStatus.UNAUTHORIZED_401) {
-                                if (getLogin() != null) {
+                                if (getLogin() == null) {
                                     mCaller.authenticationError();
                                 } else {
                                     putInstance(instance, callback);
@@ -318,6 +324,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     }
                 });
             } catch (Exception e) {
+                logger.warn("Request putInstance(instance, failed) failed: {}", e.getMessage());
                 mCaller.apiError(e.getMessage(), false);
             } finally {
                 // do not stop http client for asynchronous call
@@ -336,6 +343,7 @@ public class ZWayApiHttp extends ZWayApiBase {
 
             return new InstanceListDeserializer().deserializeInstance(instanceAsJson);
         } catch (JsonParseException e) {
+            logger.warn("Unexpected response format: {}", e.getMessage());
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
             return null;
         }
@@ -364,7 +372,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                 if (statusCode != HttpStatus.OK_200) {
                     // Authentication error - retry login and operation
                     if (statusCode == HttpStatus.UNAUTHORIZED_401) {
-                        if (getLogin() != null) {
+                        if (getLogin() == null) {
                             mCaller.authenticationError();
                         } else {
                             return getDevices();
@@ -376,6 +384,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     return parseGetDevices(response.getContentAsString());
                 }
             } catch (Exception e) {
+                logger.warn("Request getDevices() failed: {}", e.getMessage());
                 mCaller.apiError(e.getMessage(), false);
             } finally {
                 stopHttpClient(httpClient);
@@ -408,7 +417,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         int statusCode = result.getResponse().getStatus();
                         if (statusCode != HttpStatus.OK_200) {
                             if (statusCode == HttpStatus.UNAUTHORIZED_401) {
-                                if (getLogin() != null) {
+                                if (getLogin() == null) {
                                     mCaller.authenticationError();
                                 } else {
                                     getDevices(callback);
@@ -422,6 +431,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     }
                 });
             } catch (Exception e) {
+                logger.warn("Request getDevices(callback) failed: {}", e.getMessage());
                 mCaller.apiError(e.getMessage(), false);
             } finally {
                 // do not stop http client for asynchronous call
@@ -441,6 +451,7 @@ public class ZWayApiHttp extends ZWayApiBase {
 
             return new DeviceListDeserializer().deserializeDeviceList(devicesAsJson, this);
         } catch (JsonParseException e) {
+            logger.warn("Unexpected response format: {}", e.getMessage());
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
             return null;
         }
@@ -475,7 +486,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                 if (statusCode != HttpStatus.OK_200) {
                     // Authentication error - retry login and operation
                     if (statusCode == HttpStatus.UNAUTHORIZED_401) {
-                        if (getLogin() != null) {
+                        if (getLogin() == null) {
                             mCaller.authenticationError();
                         } else {
                             return getDeviceCommand(command);
@@ -488,6 +499,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                             + command.getDeviceId() + " (" + parseGetDeviceCommand(response.getContentAsString()) + ")";
                 }
             } catch (Exception e) {
+                logger.warn("Request getDeviceCommand(command) failed: {}", e.getMessage());
                 mCaller.apiError(e.getMessage(), false);
             } finally {
                 stopHttpClient(httpClient);
@@ -527,7 +539,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         int statusCode = result.getResponse().getStatus();
                         if (statusCode != HttpStatus.OK_200) {
                             if (statusCode == HttpStatus.UNAUTHORIZED_401) {
-                                if (getLogin() != null) {
+                                if (getLogin() == null) {
                                     mCaller.authenticationError();
                                 } else {
                                     getDeviceCommand(command, callback);
@@ -543,6 +555,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     }
                 });
             } catch (Exception e) {
+                logger.warn("Request getDeviceCommand(command, callback) failed: {}", e.getMessage());
                 mCaller.apiError(e.getMessage(), false);
             } finally {
                 // do not stop http client for asynchronous call
@@ -566,6 +579,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     path += URLEncoder.encode(entry.getKey(), "UTF-8") + "="
                             + URLEncoder.encode(entry.getValue(), "UTF-8");
                 } catch (UnsupportedEncodingException e) {
+                    logger.warn("Device command parameter invalid: {}", e.getMessage());
                     mCaller.apiError("Device command parameter invalid: " + e.getMessage(), false);
                     return null;
                 }
@@ -588,6 +602,7 @@ public class ZWayApiHttp extends ZWayApiBase {
 
             return dataMessage;
         } catch (JsonParseException e) {
+            logger.warn("Unexpected response format: {}", e.getMessage());
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
             return null;
         }
@@ -623,7 +638,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                 if (statusCode != HttpStatus.OK_200) {
                     // Authentication error - retry login and operation
                     if (statusCode == HttpStatus.UNAUTHORIZED_401) {
-                        if (getLogin() != null) {
+                        if (getLogin() == null) {
                             mCaller.authenticationError();
                         } else {
                             return getZWaveDevice(nodeId);
@@ -635,6 +650,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     return parseGetZWaveDevice(response.getContentAsString());
                 }
             } catch (Exception e) {
+                logger.warn("Request getZWaveDevice(nodeId) failed: {}", e.getMessage());
                 mCaller.apiError(e.getMessage(), false);
             } finally {
                 stopHttpClient(httpClient);
@@ -671,7 +687,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         int statusCode = result.getResponse().getStatus();
                         if (statusCode != HttpStatus.OK_200) {
                             if (statusCode == HttpStatus.UNAUTHORIZED_401) {
-                                if (getLogin() != null) {
+                                if (getLogin() == null) {
                                     mCaller.authenticationError();
                                 } else {
                                     getZWaveDevice(nodeId, callback);
@@ -685,6 +701,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     }
                 });
             } catch (Exception e) {
+                logger.warn("Request getZWaveDevice(nodeId, callback) failed: {}", e.getMessage());
                 mCaller.apiError(e.getMessage(), false);
             } finally {
                 // do not stop http client for asynchronous call
@@ -702,6 +719,7 @@ public class ZWayApiHttp extends ZWayApiBase {
 
             return gson.fromJson(responseDataAsJson, ZWaveDevice.class);
         } catch (JsonParseException e) {
+            logger.warn("Unexpected response format: {}", e.getMessage());
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
             return null;
         }
