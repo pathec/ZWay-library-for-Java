@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.1.2] - 2016-09-23
 ### Fixed
 - Exception handling if the HTTP status differs from 200, which is important in case that the server is restarted (HTTP status 401)
-- Add logging information 
+- Add logging information
+- Only the login function sets the instance in a non-valid state when an error occurs (callback with invalidate state true). All other functions inform only the caller
 
 ## [0.1.1] - 2016-09-19
 ### Changed

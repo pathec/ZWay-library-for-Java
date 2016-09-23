@@ -116,11 +116,11 @@ public class ZWayApiHttp extends ZWayApiBase {
                 return mZWaySessionId;
             } catch (JsonParseException e) {
                 logger.warn("Unexpected response format: {}", e.getMessage());
-                mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
+                mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), true);
             }
         } catch (Exception e) {
             logger.warn("Request getLogin() failed: {}", e.getMessage());
-            mCaller.apiError(e.getMessage(), false);
+            mCaller.apiError(e.getMessage(), true);
         } finally {
             stopHttpClient(httpClient);
         }
