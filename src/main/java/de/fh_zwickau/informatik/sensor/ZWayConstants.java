@@ -138,4 +138,5 @@ public class ZWayConstants {
     public static final String DEVICE_TYPE_SWITCH_CONTROL = "switchControl";
     public static final String DEVICE_TYPE_TOGGLE_BUTTON = "toggleButton";
     public static final String DEVICE_TYPE_SWITCH_RGBW = "switchRGBW";
+    public static final String DEVICE_TYPE_TEXT = "text";
 }

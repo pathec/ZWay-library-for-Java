@@ -84,8 +84,11 @@ public class DeviceListDeserializer {
                 case ZWayConstants.DEVICE_TYPE_TOGGLE_BUTTON:
                     device = gson.fromJson(deviceAsJson, ToggleButton.class);
                     break;
+                case ZWayConstants.DEVICE_TYPE_TEXT:
+                    // ignore text type: device = gson.fromJson(deviceAsJson, Text.class);
+                    break;
                 default:
-                    logger.warn("Unknown device type: " + deviceType);
+                    logger.debug("Unknown device type: " + deviceType);
                     break;
             }
 

@@ -59,7 +59,7 @@ public class InstanceListDeserializer {
                 instance = gson.fromJson(instanceAsJson, OpenHABConnector.class);
                 break;
             default:
-                logger.warn("Unknown module id: " + moduleId);
+                logger.debug("Unknown module id: " + moduleId);
                 break;
         }
         return instance;
