@@ -967,10 +967,8 @@ public class ZWayApiHttp extends ZWayApiBase {
         // Expected response format: { "data": { "givenName": { "value": *** }, ... }, ... }
         try {
             Gson gson = new Gson();
-            // Response -> String -> Json -> extract data field
-            JsonObject responseDataAsJson = gson.fromJson(data, JsonObject.class).get("data").getAsJsonObject();
 
-            return gson.fromJson(responseDataAsJson, ZWaveDevice.class);
+            return gson.fromJson(data, ZWaveDevice.class);
         } catch (JsonParseException e) {
             logger.warn("Unexpected response format: {}", e.getMessage());
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
