@@ -22,7 +22,17 @@ public class ZWaveDevice {
     @SerializedName("givenName")
     private ZWaveDataElement mGivenName;
 
+    /**
+     * Instantiate a Z-Wave device object with default values.
+     */
+    public ZWaveDevice() {
+        mGivenName = new ZWaveDataElement();
+    }
+
     public ZWaveDataElement getGivenName() {
+        if (mGivenName == null) {
+            mGivenName = new ZWaveDataElement();
+        }
         return mGivenName;
     }
 
@@ -32,7 +42,7 @@ public class ZWaveDevice {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

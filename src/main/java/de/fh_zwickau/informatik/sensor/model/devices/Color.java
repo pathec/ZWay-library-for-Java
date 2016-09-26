@@ -36,6 +36,9 @@ public class Color {
     }
 
     public Integer getRed() {
+        if (mRed == null) {
+            mRed = 0;
+        }
         return mRed;
     }
 
@@ -44,6 +47,9 @@ public class Color {
     }
 
     public Integer getGreen() {
+        if (mGreen == null) {
+            mGreen = 0;
+        }
         return mGreen;
     }
 
@@ -52,6 +58,9 @@ public class Color {
     }
 
     public Integer getBlue() {
+        if (mBlue == null) {
+            mBlue = 0;
+        }
         return mBlue;
     }
 

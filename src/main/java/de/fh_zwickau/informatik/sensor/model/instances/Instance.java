@@ -48,6 +48,9 @@ public abstract class Instance {
     }
 
     public String getInstanceId() {
+        if (mInstanceId == null) {
+            mInstanceId = "";
+        }
         return mInstanceId;
     }
 
@@ -56,6 +59,9 @@ public abstract class Instance {
     }
 
     public String getModuleId() {
+        if (mModuleId == null) {
+            mModuleId = "";
+        }
         return mModuleId;
     }
 
@@ -64,6 +70,9 @@ public abstract class Instance {
     }
 
     public Boolean getActive() {
+        if (mActive == null) {
+            mActive = true;
+        }
         return mActive;
     }
 
@@ -72,6 +81,9 @@ public abstract class Instance {
     }
 
     public String getTitle() {
+        if (mTitle == null) {
+            mTitle = "";
+        }
         return mTitle;
     }
 
@@ -80,6 +92,9 @@ public abstract class Instance {
     }
 
     public Integer getId() {
+        if (mId == null) {
+            mId = -1;
+        }
         return mId;
     }
 
@@ -88,6 +103,9 @@ public abstract class Instance {
     }
 
     public Integer getCreationTime() {
+        if (mCreationTime == null) {
+            mCreationTime = -1;
+        }
         return mCreationTime;
     }
 
@@ -96,6 +114,9 @@ public abstract class Instance {
     }
 
     public String getModule() {
+        if (mModule == null) {
+            mModule = "";
+        }
         return mModule;
     }
 

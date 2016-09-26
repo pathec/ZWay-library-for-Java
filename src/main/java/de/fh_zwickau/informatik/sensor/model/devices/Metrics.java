@@ -62,6 +62,9 @@ public class Metrics {
     }
 
     public String getIcon() {
+        if (mIcon == null) {
+            mIcon = "";
+        }
         return mIcon;
     }
 
@@ -70,6 +73,9 @@ public class Metrics {
     }
 
     public String getTitle() {
+        if (mTitle == null) {
+            mTitle = "";
+        }
         return mTitle;
     }
 
@@ -78,6 +84,9 @@ public class Metrics {
     }
 
     public String getLevel() {
+        if (mLevel == null) {
+            mLevel = "";
+        }
         return mLevel;
     }
 
@@ -86,6 +95,9 @@ public class Metrics {
     }
 
     public String getProbeTitle() {
+        if (mProbeTitle == null) {
+            mProbeTitle = "";
+        }
         return mProbeTitle;
     }
 
@@ -94,6 +106,9 @@ public class Metrics {
     }
 
     public String getScaleTitle() {
+        if (mScaleTitle == null) {
+            mScaleTitle = "";
+        }
         return mScaleTitle;
     }
 
@@ -102,6 +117,9 @@ public class Metrics {
     }
 
     public String getMode() {
+        if (mMode == null) {
+            mMode = "";
+        }
         return mMode;
     }
 
@@ -110,6 +128,9 @@ public class Metrics {
     }
 
     public List<String> getModes() {
+        if (mModes == null) {
+            mModes = new ArrayList<String>();
+        }
         return mModes;
     }
 
@@ -118,6 +139,9 @@ public class Metrics {
     }
 
     public Color getColor() {
+        if (mColor == null) {
+            mColor = new Color();
+        }
         return mColor;
     }
 
@@ -126,6 +150,9 @@ public class Metrics {
     }
 
     public Integer getMin() {
+        if (mMin == null) {
+            mMin = 0;
+        }
         return mMin;
     }
 
@@ -134,6 +161,9 @@ public class Metrics {
     }
 
     public Integer getMax() {
+        if (mMax == null) {
+            mMax = 0;
+        }
         return mMax;
     }
 

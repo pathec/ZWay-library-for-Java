@@ -79,6 +79,9 @@ public abstract class Device {
     }
 
     public Integer getCreationTime() {
+        if (mCreationTime == null) {
+            mCreationTime = -1;
+        }
         return mCreationTime;
     }
 
@@ -87,6 +90,9 @@ public abstract class Device {
     }
 
     public Integer getCreatorId() {
+        if (mCreatorId == null) {
+            mCreatorId = -1;
+        }
         return mCreatorId;
     }
 
@@ -95,6 +101,9 @@ public abstract class Device {
     }
 
     public String getDeviceType() {
+        if (mDeviceType == null) {
+            mDeviceType = "";
+        }
         return mDeviceType;
     }
 
@@ -103,6 +112,9 @@ public abstract class Device {
     }
 
     public Integer getH() {
+        if (mH == null) {
+            mH = -1;
+        }
         return mH;
     }
 
@@ -111,6 +123,9 @@ public abstract class Device {
     }
 
     public Boolean getHasHistory() {
+        if (mHasHistory == null) {
+            mHasHistory = false;
+        }
         return mHasHistory;
     }
 
@@ -119,6 +134,9 @@ public abstract class Device {
     }
 
     public String getDeviceId() {
+        if (mDeviceId == null) {
+            mDeviceId = "";
+        }
         return mDeviceId;
     }
 
@@ -127,6 +145,9 @@ public abstract class Device {
     }
 
     public Integer getLocation() {
+        if (mLocation == null) {
+            mLocation = -1;
+        }
         return mLocation;
     }
 
@@ -135,6 +156,9 @@ public abstract class Device {
     }
 
     public Boolean getPermanentlyHidden() {
+        if (mPermanentlyHidden == null) {
+            mPermanentlyHidden = false;
+        }
         return mPermanentlyHidden;
     }
 
@@ -143,6 +167,9 @@ public abstract class Device {
     }
 
     public String getProbeType() {
+        if (mProbeType == null) {
+            mProbeType = "";
+        }
         return mProbeType;
     }
 
@@ -151,6 +178,9 @@ public abstract class Device {
     }
 
     public Boolean getVisibility() {
+        if (mVisibility == null) {
+            mVisibility = false;
+        }
         return mVisibility;
     }
 
@@ -159,6 +189,9 @@ public abstract class Device {
     }
 
     public Integer getUpdateTime() {
+        if (mUpdateTime == null) {
+            mUpdateTime = -1;
+        }
         return mUpdateTime;
     }
 
@@ -167,6 +200,9 @@ public abstract class Device {
     }
 
     public Metrics getMetrics() {
+        if (mMetrics == null) {
+            mMetrics = new Metrics();
+        }
         return mMetrics;
     }
 
@@ -187,11 +223,11 @@ public abstract class Device {
 
         String regex = "(.*)_(\\d+)-(\\d)+-(\\d+)(.*)";
 
-        if (this.mDeviceId.matches(regex)) {
+        if (getDeviceId().matches(regex)) {
             logger.debug("Device comes with an associated device.");
 
             Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(this.mDeviceId);
+            Matcher matcher = pattern.matcher(getDeviceId());
             if (matcher.matches()) {
                 try {
                     return Integer.parseInt(matcher.group(2));

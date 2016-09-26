@@ -36,7 +36,20 @@ public class ZWaveDataElement {
     @SerializedName("value")
     private String mValue;
 
+    /**
+     * Instantiate a Z-Wave data element object with default values.
+     */
+    public ZWaveDataElement() {
+        mInvalidateTime = -1;
+        mUpdateTime = -1;
+        mType = "";
+        mValue = "";
+    }
+
     public Integer getmInvalidateTime() {
+        if (mInvalidateTime == null) {
+            mInvalidateTime = -1;
+        }
         return mInvalidateTime;
     }
 
@@ -45,6 +58,9 @@ public class ZWaveDataElement {
     }
 
     public Integer getUpdateTime() {
+        if (mUpdateTime == null) {
+            mUpdateTime = -1;
+        }
         return mUpdateTime;
     }
 
@@ -53,6 +69,9 @@ public class ZWaveDataElement {
     }
 
     public String getType() {
+        if (mType == null) {
+            mType = "";
+        }
         return mType;
     }
 
@@ -61,6 +80,9 @@ public class ZWaveDataElement {
     }
 
     public String getValue() {
+        if (mValue == null) {
+            mValue = "";
+        }
         return mValue;
     }
 
@@ -70,7 +92,7 @@ public class ZWaveDataElement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
