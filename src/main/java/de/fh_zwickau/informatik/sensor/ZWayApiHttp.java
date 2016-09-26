@@ -42,6 +42,8 @@ import de.fh_zwickau.informatik.sensor.model.devices.zwaveapi.ZWaveDevice;
 import de.fh_zwickau.informatik.sensor.model.instances.Instance;
 import de.fh_zwickau.informatik.sensor.model.instances.InstanceList;
 import de.fh_zwickau.informatik.sensor.model.instances.InstanceListDeserializer;
+import de.fh_zwickau.informatik.sensor.model.locations.LocationList;
+import de.fh_zwickau.informatik.sensor.model.locations.LocationListDeserializer;
 import de.fh_zwickau.informatik.sensor.model.login.LoginForm;
 
 /**
@@ -253,6 +255,136 @@ public class ZWayApiHttp extends ZWayApiBase {
             JsonArray instancesAsJson = gson.fromJson(data, JsonObject.class).get("data").getAsJsonArray();
 
             return new InstanceListDeserializer().deserializeInstanceList(instancesAsJson);
+        } catch (JsonParseException e) {
+            logger.warn("Unexpected response format: {}", e.getMessage());
+            mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
+            return null;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getInstances()
+     */
+    @Override
+    public synchronized LocationList getLocations() {
+        if (checkLogin()) {
+            try {
+                startHttpClient(httpClient);
+
+                Request request = httpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_LOCATIONS)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getLocations();
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return parseGetLocations(response.getContentAsString());
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getLocations();
+                        }
+                    }
+                } else {
+                    logger.warn("Request getInstances() failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                stopHttpClient(httpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getInstances(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
+    @Override
+    public void getLocations(final IZWayCallback<LocationList> callback) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(httpClient);
+
+                Request request = httpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
+                        .onRequestFailure(new ZWayFailureListener());
+
+                request.send(new BufferingResponseListener() {
+                    @Override
+                    public void onComplete(Result result) {
+                        int statusCode = result.getResponse().getStatus();
+                        if (statusCode != HttpStatus.OK_200) {
+                            if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                                if (getLogin() == null) {
+                                    mCaller.authenticationError();
+                                } else {
+                                    getLocations(callback);
+                                }
+                            } else {
+                                processResponseStatus(statusCode);
+                            }
+                        } else {
+                            callback.onSuccess(parseGetLocations(getContentAsString()));
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getLocations(callback);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getLogin(callback) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                // do not stop http client for asynchronous call
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+    }
+
+    private synchronized LocationList parseGetLocations(String data) {
+        // Request performed successfully: load response body
+        // Expected response format: { "data": [...] }, ... }
+        try {
+            Gson gson = new Gson();
+            // Response -> String -> Json -> extract data field
+            JsonArray locationsAsJson = gson.fromJson(data, JsonObject.class).get("data").getAsJsonArray();
+
+            return new LocationListDeserializer().deserializeLocationList(locationsAsJson);
         } catch (JsonParseException e) {
             logger.warn("Unexpected response format: {}", e.getMessage());
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);

@@ -1,8 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/) 
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
+
+## [0.1.3] - 2016-09-26
+### Added
+- Minimal implementation of location API (only with id and title property)
+- Extend (physical) Z-Wave device model from ZWaveAPI
 
 ## [0.1.2] - 2016-09-25
 ### Fixed

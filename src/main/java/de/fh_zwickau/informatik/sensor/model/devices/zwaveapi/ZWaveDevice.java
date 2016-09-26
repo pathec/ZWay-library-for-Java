@@ -19,25 +19,40 @@ import com.google.gson.annotations.SerializedName;
  * @author Patrick Hecker - Initial contribution
  */
 public class ZWaveDevice {
-    @SerializedName("givenName")
-    private ZWaveDataElement mGivenName;
+    // TODO ZWaveDeviceInstances
+    @SerializedName("data")
+    private ZWaveDeviceData mData;
+    @SerializedName("id")
+    private Integer mId;
 
     /**
      * Instantiate a Z-Wave device object with default values.
      */
     public ZWaveDevice() {
-        mGivenName = new ZWaveDataElement();
+        mData = new ZWaveDeviceData();
+        mId = -1;
     }
 
-    public ZWaveDataElement getGivenName() {
-        if (mGivenName == null) {
-            mGivenName = new ZWaveDataElement();
+    public ZWaveDeviceData getData() {
+        if (mData == null) {
+            mData = new ZWaveDeviceData();
         }
-        return mGivenName;
+        return mData;
     }
 
-    public void setGivenName(ZWaveDataElement givenName) {
-        this.mGivenName = givenName;
+    public void setData(ZWaveDeviceData data) {
+        this.mData = data;
+    }
+
+    public Integer getId() {
+        if (mId == null) {
+            mId = -1;
+        }
+        return mId;
+    }
+
+    public void setId(Integer id) {
+        this.mId = id;
     }
 
     /*
@@ -47,6 +62,6 @@ public class ZWaveDevice {
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("givenName", mGivenName).toString();
+        return new ToStringBuilder(this).append("data", mData).append("id", mId).toString();
     }
 }

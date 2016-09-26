@@ -7,7 +7,8 @@ This project provides a Z-Way library for Java. The offical API description is a
 - PUT instance
 - GET devices
 - GET device command
-- GET Z-Wave device
+- GET locations (only with id and title property)
+- GET Z-Wave device (device model not complete)
 - other methods throw an `UnsupportedOperationException`
 
 ## Installation
@@ -15,7 +16,7 @@ This project provides a Z-Way library for Java. The offical API description is a
 - Install Maven if not already installed
 - Clone project and navigate with console to the root folder of the project
 - Build JAR file: `mvn package`
-- Add the resulting file (`target/zway-lib-*.*.*-SNAPSHOT.jar`) into your project 
+- Add the resulting file (`target/zway-lib-*.*.*-SNAPSHOT.jar`) into your project
 - All dependencies: Gson, Apache Commons Lang, Jetty and SLF4J must be resolved (see [Dependencies](#dependencies) for detail)
 
 ## Usage
@@ -29,15 +30,15 @@ This project provides a Z-Way library for Java. The offical API description is a
  - username (default: admin)
  - password (default: admin)
  - caller must implement the `IZWayApiCallbacks` interface to receive asynchronous callbacks
- 
+
 ### GET login
 - `mZWayApi.getLogin()` returns the session id or null (which is stored internaly for further requests)
 
 ### GET devices
 
 - Synchronous: ```mZWayApi.getDevices()``` returns the device list or null
-- Asynchronous: 
- 
+- Asynchronous:
+
     ```getDevices(new IZWayCallback<DeviceList>() {
         @Override
         public void onSuccess(DeviceList deviceList) {
