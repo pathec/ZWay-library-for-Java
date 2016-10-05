@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package de.fh_zwickau.informatik.sensor.model.devices.zwaveapi;
+package de.fh_zwickau.informatik.sensor.model.zwaveapi;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

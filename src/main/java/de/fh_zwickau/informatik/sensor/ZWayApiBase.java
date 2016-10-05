@@ -21,7 +21,6 @@ import de.fh_zwickau.informatik.sensor.model.devices.Device;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceCommand;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceList;
 import de.fh_zwickau.informatik.sensor.model.devices.IDeviceCommands;
-import de.fh_zwickau.informatik.sensor.model.devices.zwaveapi.ZWaveDevice;
 import de.fh_zwickau.informatik.sensor.model.instances.Instance;
 import de.fh_zwickau.informatik.sensor.model.instances.InstanceList;
 import de.fh_zwickau.informatik.sensor.model.locations.Location;
@@ -32,6 +31,8 @@ import de.fh_zwickau.informatik.sensor.model.notifications.Notification;
 import de.fh_zwickau.informatik.sensor.model.notifications.NotificationList;
 import de.fh_zwickau.informatik.sensor.model.profiles.Profile;
 import de.fh_zwickau.informatik.sensor.model.profiles.ProfileList;
+import de.fh_zwickau.informatik.sensor.model.zwaveapi.controller.ZWaveController;
+import de.fh_zwickau.informatik.sensor.model.zwaveapi.devices.ZWaveDevice;
 
 /**
  * The {@link ZWayApiBase} implements some basic methods of ZAutomation API. See also:
@@ -461,6 +462,21 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
+    public ZWaveController getZWaveController() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void getZWaveInclusion(int flag) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void getZWaveExclusion(int flag) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void getStatus(IZWayCallback<String> callback) {
         throw new UnsupportedOperationException();
     }
@@ -603,6 +619,11 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     @Override
     public void getZWaveDevice(int nodeId, IZWayCallback<ZWaveDevice> callback) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void getZWaveController(IZWayCallback<ZWaveController> callback) {
         throw new UnsupportedOperationException();
     }
 }

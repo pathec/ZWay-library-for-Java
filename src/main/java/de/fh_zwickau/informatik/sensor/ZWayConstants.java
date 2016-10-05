@@ -28,6 +28,9 @@ public class ZWayConstants {
     public static final String PATH_DEVICE_HISTORY = "history";
 
     public static final String ZWAVE_PATH_DEVICES = "devices[{nodeId}]";
+    public static final String ZWAVE_PATH_CONTROLLER = "controller";
+    public static final String ZWAVE_PATH_INCLUSION = "controller.AddNodeToNetwork({flag})";
+    public static final String ZWAVE_PATH_EXCLUSION = "controller.RemoveNodeFromNetwork({flag})";
 
     public static final String ICON_NONE = "";
     public static final String ICON_SWITCH = "switch";

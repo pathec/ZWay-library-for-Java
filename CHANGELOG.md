@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.4] - 2016-10-05
+### Added
+- ZWave controller API with controller information and inclusion/exclusion functions
+
 ## [0.1.3] - 2016-09-26
 ### Added
 - Minimal implementation of location API (only with id and title property)

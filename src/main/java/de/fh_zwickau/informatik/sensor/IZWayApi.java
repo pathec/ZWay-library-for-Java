@@ -15,7 +15,6 @@ import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistoryList;
 import de.fh_zwickau.informatik.sensor.model.devices.Device;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceCommand;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceList;
-import de.fh_zwickau.informatik.sensor.model.devices.zwaveapi.ZWaveDevice;
 import de.fh_zwickau.informatik.sensor.model.instances.Instance;
 import de.fh_zwickau.informatik.sensor.model.instances.InstanceList;
 import de.fh_zwickau.informatik.sensor.model.locations.Location;
@@ -26,6 +25,8 @@ import de.fh_zwickau.informatik.sensor.model.notifications.Notification;
 import de.fh_zwickau.informatik.sensor.model.notifications.NotificationList;
 import de.fh_zwickau.informatik.sensor.model.profiles.Profile;
 import de.fh_zwickau.informatik.sensor.model.profiles.ProfileList;
+import de.fh_zwickau.informatik.sensor.model.zwaveapi.controller.ZWaveController;
+import de.fh_zwickau.informatik.sensor.model.zwaveapi.devices.ZWaveDevice;
 
 /**
  * The {@link IZWayApi} represents the ZAutomation API (and ZWaveAPI). See also:
@@ -451,4 +452,26 @@ public interface IZWayApi {
      * @param callback contains the same data like synchronous return value
      */
     void getZWaveDevice(int nodeId, IZWayCallback<ZWaveDevice> callback);
+
+    /**
+     * @return Z-Wave controller
+     */
+    ZWaveController getZWaveController();
+
+    /**
+     * Asynchronous version of {@link #getZWaveController()}
+     *
+     * @param callback contains the same data like synchronous return value
+     */
+    void getZWaveController(IZWayCallback<ZWaveController> callback);
+
+    /**
+     * @param flag 1 start and 0 stop inclusion
+     */
+    void getZWaveInclusion(int flag);
+
+    /**
+     * @param flag 1 start and 0 stop exclusion
+     */
+    void getZWaveExclusion(int flag);
 }

@@ -38,13 +38,14 @@ import com.google.gson.JsonParseException;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceCommand;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceList;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceListDeserializer;
-import de.fh_zwickau.informatik.sensor.model.devices.zwaveapi.ZWaveDevice;
 import de.fh_zwickau.informatik.sensor.model.instances.Instance;
 import de.fh_zwickau.informatik.sensor.model.instances.InstanceList;
 import de.fh_zwickau.informatik.sensor.model.instances.InstanceListDeserializer;
 import de.fh_zwickau.informatik.sensor.model.locations.LocationList;
 import de.fh_zwickau.informatik.sensor.model.locations.LocationListDeserializer;
 import de.fh_zwickau.informatik.sensor.model.login.LoginForm;
+import de.fh_zwickau.informatik.sensor.model.zwaveapi.controller.ZWaveController;
+import de.fh_zwickau.informatik.sensor.model.zwaveapi.devices.ZWaveDevice;
 
 /**
  * The {@link ZWayApiHttp} implements the ZAutomation API. See also:
@@ -974,6 +975,251 @@ public class ZWayApiHttp extends ZWayApiBase {
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
             return null;
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getZWaveController()
+     */
+    @Override
+    public synchronized ZWaveController getZWaveController() {
+        if (checkLogin()) {
+            try {
+                startHttpClient(httpClient);
+
+                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + ZWAVE_PATH_CONTROLLER)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getZWaveController();
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return parseGetZWaveController(response.getContentAsString());
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getZWaveController();
+                        }
+                    }
+                } else {
+                    logger.warn("Request getZWaveController() failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                stopHttpClient(httpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getZWaveController(
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
+    @Override
+    public void getZWaveController(final IZWayCallback<ZWaveController> callback) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(httpClient);
+
+                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + ZWAVE_PATH_CONTROLLER)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
+                        .onRequestFailure(new ZWayFailureListener());
+
+                request.send(new BufferingResponseListener() {
+                    @Override
+                    public void onComplete(Result result) {
+                        int statusCode = result.getResponse().getStatus();
+                        if (statusCode != HttpStatus.OK_200) {
+                            if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                                if (getLogin() == null) {
+                                    mCaller.authenticationError();
+                                } else {
+                                    getZWaveController(callback);
+                                }
+                            } else {
+                                processResponseStatus(statusCode);
+                            }
+                        } else {
+                            callback.onSuccess(parseGetZWaveController(getContentAsString()));
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getZWaveController(callback);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getZWaveController(callback) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                // do not stop http client for asynchronous call
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+    }
+
+    private synchronized ZWaveController parseGetZWaveController(String data) {
+        // Request performed successfully: load response body
+        // Expected response format: { "data": { "nodeId": { "value": *** }, ... }, ... }
+        try {
+            Gson gson = new Gson();
+
+            return gson.fromJson(data, ZWaveController.class);
+        } catch (JsonParseException e) {
+            logger.warn("Unexpected response format: {}", e.getMessage());
+            mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
+            return null;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getZWaveInclusion()
+     */
+    @Override
+    public synchronized void getZWaveInclusion(int flag) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(httpClient);
+
+                String path = URLEncoder
+                        .encode(StringUtils.replace(ZWAVE_PATH_INCLUSION, "{flag}", String.valueOf(flag)), "UTF-8");
+
+                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                        .header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getZWaveInclusion(flag);
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return;
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getZWaveInclusion(flag);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getZWaveInclusion(flag) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                stopHttpClient(httpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getZWaveExclusion()
+     */
+    @Override
+    public synchronized void getZWaveExclusion(int flag) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(httpClient);
+
+                String path = URLEncoder
+                        .encode(StringUtils.replace(ZWAVE_PATH_EXCLUSION, "{flag}", String.valueOf(flag)), "UTF-8");
+
+                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                        .header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getZWaveExclusion(flag);
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return;
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getZWaveExclusion(flag);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getZWaveExclusion(flag) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                stopHttpClient(httpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
     }
 
     /*********************

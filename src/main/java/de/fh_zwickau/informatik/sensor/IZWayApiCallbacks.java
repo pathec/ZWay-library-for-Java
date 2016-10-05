@@ -12,7 +12,6 @@ import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistory;
 import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistoryList;
 import de.fh_zwickau.informatik.sensor.model.devices.Device;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceList;
-import de.fh_zwickau.informatik.sensor.model.devices.zwaveapi.ZWaveDevice;
 import de.fh_zwickau.informatik.sensor.model.instances.Instance;
 import de.fh_zwickau.informatik.sensor.model.instances.InstanceList;
 import de.fh_zwickau.informatik.sensor.model.locations.Location;
@@ -23,6 +22,8 @@ import de.fh_zwickau.informatik.sensor.model.notifications.Notification;
 import de.fh_zwickau.informatik.sensor.model.notifications.NotificationList;
 import de.fh_zwickau.informatik.sensor.model.profiles.Profile;
 import de.fh_zwickau.informatik.sensor.model.profiles.ProfileList;
+import de.fh_zwickau.informatik.sensor.model.zwaveapi.controller.ZWaveController;
+import de.fh_zwickau.informatik.sensor.model.zwaveapi.devices.ZWaveDevice;
 
 /**
  * The {@link IZWayApiCallbacks} defines a all possible callbacks of ZAutomation API. See also:
@@ -202,6 +203,11 @@ public interface IZWayApiCallbacks {
      * @param zwaveDevice
      */
     void getZWaveDeviceResponse(ZWaveDevice zwaveDevice);
+
+    /**
+     * @param zwaveController
+     */
+    void getZWaveControllerResponse(ZWaveController zwaveController);
 
     // Other
 
