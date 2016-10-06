@@ -96,8 +96,7 @@ public class ZWaveControllerData {
     private ZWaveDataElement mSoftwareRevisionDate;
     @SerializedName("uuid")
     private ZWaveDataElement mUuid;
-    @SerializedName("caps")
-    private ZWaveDataElement mCaps;
+    // TODO caps is an array
     @SerializedName("frequency")
     private ZWaveDataElement mFrequency;
     @SerializedName("deviceRelaxDelay")
@@ -143,7 +142,6 @@ public class ZWaveControllerData {
         this.mSoftwareRevisionId = new ZWaveDataElement();
         this.mSoftwareRevisionDate = new ZWaveDataElement();
         this.mUuid = new ZWaveDataElement();
-        this.mCaps = new ZWaveDataElement();
         this.mFrequency = new ZWaveDataElement();
         this.mDeviceRelaxDelay = new ZWaveDataElement();
     }
@@ -544,17 +542,6 @@ public class ZWaveControllerData {
         this.mUuid = uuid;
     }
 
-    public ZWaveDataElement getCaps() {
-        if (mCaps == null) {
-            mCaps = new ZWaveDataElement();
-        }
-        return mCaps;
-    }
-
-    public void setCaps(ZWaveDataElement caps) {
-        this.mCaps = caps;
-    }
-
     public ZWaveDataElement getFrequency() {
         if (mFrequency == null) {
             mFrequency = new ZWaveDataElement();
@@ -602,7 +589,7 @@ public class ZWaveControllerData {
                 .append("memoryGetAddress", mMemoryGetAddress).append("memoryGetData", mMemoryGetData)
                 .append("softwareRevisionVersion", mSoftwareRevisionVersion)
                 .append("softwareRevisionId", mSoftwareRevisionId).append("softwareRevisionDate", mSoftwareRevisionDate)
-                .append("uuid", mUuid).append("caps", mCaps).append("frequency", mFrequency)
-                .append("deviceRelaxDela", mDeviceRelaxDelay).toString();
+                .append("uuid", mUuid).append("frequency", mFrequency).append("deviceRelaxDela", mDeviceRelaxDelay)
+                .toString();
     }
 }
