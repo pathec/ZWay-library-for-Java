@@ -29,6 +29,17 @@ public class ZWaveController {
         mData = new ZWaveControllerData();
     }
 
+    public ZWaveControllerData getData() {
+        if (mData == null) {
+            mData = new ZWaveControllerData();
+        }
+        return mData;
+    }
+
+    public void setData(ZWaveControllerData data) {
+        this.mData = data;
+    }
+
     /*
      * (non-Javadoc)
      *
