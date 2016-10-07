@@ -1222,6 +1222,58 @@ public class ZWayApiHttp extends ZWayApiBase {
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
 
+    @Override
+    public void updateControllerData(String field, String value) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(httpClient);
+
+                String path = URLEncoder.encode(ZWAVE_PATH_CONTROLLER_DATA + "." + field + "=" + value, "UTF-8");
+
+                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                        .header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            updateControllerData(field, value);
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return;
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            updateControllerData(field, value);
+                        }
+                    }
+                } else {
+                    logger.warn("Request updateControllerData(field, value) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                stopHttpClient(httpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+    }
+
     /*********************
      ****** Utility ******
      ********************/

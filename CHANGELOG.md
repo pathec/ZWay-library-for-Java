@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.5] - 2016-10-07
+### Added
+- Method to update controller data, for example to enable or disable secure inclusion
+
 ## [0.1.4] - 2016-10-05
 ### Added
 - ZWave controller API with controller information and inclusion/exclusion functions

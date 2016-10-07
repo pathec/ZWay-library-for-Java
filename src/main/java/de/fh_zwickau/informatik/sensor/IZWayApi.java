@@ -474,4 +474,10 @@ public interface IZWayApi {
      * @param flag 1 start and 0 stop exclusion
      */
     void getZWaveExclusion(int flag);
+
+    /**
+     * @param field of controller data
+     * @param corresponding value
+     */
+    void updateControllerData(String field, String value);
 }

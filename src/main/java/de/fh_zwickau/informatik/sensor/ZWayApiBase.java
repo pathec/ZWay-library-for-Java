@@ -477,6 +477,11 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
+    public void updateControllerData(String field, String value) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void getStatus(IZWayCallback<String> callback) {
         throw new UnsupportedOperationException();
     }

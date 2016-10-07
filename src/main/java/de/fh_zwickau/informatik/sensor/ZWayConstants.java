@@ -31,6 +31,7 @@ public class ZWayConstants {
     public static final String ZWAVE_PATH_CONTROLLER = "controller";
     public static final String ZWAVE_PATH_INCLUSION = "controller.AddNodeToNetwork({flag})";
     public static final String ZWAVE_PATH_EXCLUSION = "controller.RemoveNodeFromNetwork({flag})";
+    public static final String ZWAVE_PATH_CONTROLLER_DATA = "controller.data";
 
     public static final String ICON_NONE = "";
     public static final String ICON_SWITCH = "switch";
