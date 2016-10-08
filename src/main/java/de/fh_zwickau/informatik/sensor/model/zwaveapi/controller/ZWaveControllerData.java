@@ -84,8 +84,7 @@ public class ZWaveControllerData {
     private ZWaveDataElement mCountJobs;
     @SerializedName("memoryGetAddress")
     private ZWaveDataElement mMemoryGetAddress;
-    @SerializedName("memoryGetData")
-    private ZWaveDataElement mMemoryGetData;
+    // TODO mMemoryGetData is an array
     // TODO functionClasses is an array
     // TODO functionClassesNames is an array
     @SerializedName("softwareRevisionVersion")
@@ -137,7 +136,6 @@ public class ZWaveControllerData {
         this.mCurSerialAPIByteTimeout10ms = new ZWaveDataElement();
         this.mCountJobs = new ZWaveDataElement();
         this.mMemoryGetAddress = new ZWaveDataElement();
-        this.mMemoryGetData = new ZWaveDataElement();
         this.mSoftwareRevisionVersion = new ZWaveDataElement();
         this.mSoftwareRevisionId = new ZWaveDataElement();
         this.mSoftwareRevisionDate = new ZWaveDataElement();
@@ -487,17 +485,6 @@ public class ZWaveControllerData {
         this.mMemoryGetAddress = memoryGetAddress;
     }
 
-    public ZWaveDataElement getMemoryGetData() {
-        if (mMemoryGetData == null) {
-            mMemoryGetData = new ZWaveDataElement();
-        }
-        return mMemoryGetData;
-    }
-
-    public void setMemoryGetData(ZWaveDataElement memoryGetData) {
-        this.mMemoryGetData = memoryGetData;
-    }
-
     public ZWaveDataElement getSoftwareRevisionVersion() {
         if (mSoftwareRevisionVersion == null) {
             mSoftwareRevisionVersion = new ZWaveDataElement();
@@ -586,7 +573,7 @@ public class ZWaveControllerData {
                 .append("oldSerialAPIByteTimeout10ms", mOldSerialAPIByteTimeout10ms)
                 .append("curSerialAPIAckTimeout10ms", mCurSerialAPIAckTimeout10ms)
                 .append("curSerialAPIByteTimeout10ms", mCurSerialAPIByteTimeout10ms).append("countJobs", mCountJobs)
-                .append("memoryGetAddress", mMemoryGetAddress).append("memoryGetData", mMemoryGetData)
+                .append("memoryGetAddress", mMemoryGetAddress)
                 .append("softwareRevisionVersion", mSoftwareRevisionVersion)
                 .append("softwareRevisionId", mSoftwareRevisionId).append("softwareRevisionDate", mSoftwareRevisionDate)
                 .append("uuid", mUuid).append("frequency", mFrequency).append("deviceRelaxDela", mDeviceRelaxDelay)
