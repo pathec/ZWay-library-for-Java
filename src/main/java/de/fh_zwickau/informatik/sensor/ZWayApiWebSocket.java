@@ -23,6 +23,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import de.fh_zwickau.informatik.sensor.model.devices.Device;
+import de.fh_zwickau.informatik.sensor.model.devices.DeviceListDeserializer;
+
 /**
  * The {@link ZWayApiWebSocket} implements the ZAutomation API. See also:
  * http://docs.zwayhomeautomation.apiary.io/#
@@ -75,10 +78,16 @@ public class ZWayApiWebSocket extends ZWayApiBase {
         try {
             Gson gson = new Gson();
             String type = gson.fromJson(message, JsonObject.class).get("type").getAsString();
-            JsonObject data = gson.fromJson(message, JsonObject.class).get("data").getAsJsonObject();
-
             logger.info("Z-Way WebSocket message type: {}", type);
-            logger.info("Z-Way WebSocket message data: {}", data);
+
+            if (type.equals("connector.openhab.devices.level_update")) {
+                String deviceAsString = gson.fromJson(message, JsonObject.class).get("data").getAsString();
+                Device device = new DeviceListDeserializer()
+                        .deserializeDevice(gson.fromJson(deviceAsString, JsonObject.class).getAsJsonObject(), this);
+                if (device != null) {
+                    mCaller.getDeviceResponse(device);
+                }
+            }
         } catch (JsonParseException e) {
             logger.warn("Z-Way WebSocket unexpected response format: {}", e.getMessage());
             mCaller.responseFormatError("Z-Way WebSocket unexpected response format: " + e.getMessage(), false);
