@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.6] - 2016-11-14
+### Removed
+- Fields mode and modes from device model (have been removed in current version)
+- Commands setMode() and setTemp() from device model and ZWayApi (have been removed in current version)
+
+### Fixed
+- Add command exact() to device type thermostat instead of setMode() and setTemp()
+
 ## [0.1.5] - 2016-10-07
 ### Added
 - Method to update controller data, for example to enable or disable secure inclusion

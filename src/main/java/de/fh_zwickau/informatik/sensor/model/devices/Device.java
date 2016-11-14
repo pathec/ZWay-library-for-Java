@@ -318,14 +318,6 @@ public abstract class Device {
         throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
     }
 
-    public String setTemp(Double temp) {
-        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
-    }
-
-    public String setMode(String mode) {
-        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
-    }
-
     public String increase() {
         throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
     }

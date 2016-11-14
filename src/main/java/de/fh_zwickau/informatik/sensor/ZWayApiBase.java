@@ -264,20 +264,6 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public String setTemp(Device device, Double temp) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("temp", temp.toString());
-        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "setTemp", params));
-    }
-
-    @Override
-    public String setMode(Device device, String mode) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("mode", mode);
-        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "setMode", params));
-    }
-
-    @Override
     public String increase(Device device) {
         return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "increase", null));
     }

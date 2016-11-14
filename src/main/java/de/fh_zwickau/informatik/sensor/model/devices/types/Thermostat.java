@@ -18,18 +18,13 @@ import de.fh_zwickau.informatik.sensor.model.devices.Device;
  */
 public class Thermostat extends Device {
     @Override
-    public String setMode(String mode) {
-        return mCommandHandler.setMode(this, mode);
-    }
-
-    @Override
-    public String setTemp(Double temp) {
-        return mCommandHandler.setTemp(this, temp);
+    public String exact(String level) {
+        return mCommandHandler.exact(this, level);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.model.devices.Device#toString()
      */
     @Override

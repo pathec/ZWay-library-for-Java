@@ -47,10 +47,6 @@ public interface IDeviceCommands {
 
     String close(Device device);
 
-    String setTemp(Device device, Double temp);
-
-    String setMode(Device device, String mode);
-
     String increase(Device device);
 
     String decrease(Device device);

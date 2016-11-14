@@ -8,9 +8,6 @@
  */
 package de.fh_zwickau.informatik.sensor.model.devices;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.gson.annotations.SerializedName;
@@ -32,10 +29,6 @@ public class Metrics {
     private String mProbeTitle;
     @SerializedName("scaleTitle")
     private String mScaleTitle;
-    @SerializedName("mode")
-    private String mMode;
-    @SerializedName("modes")
-    private List<String> mModes;
 
     @SerializedName("color")
     private Color mColor;
@@ -54,8 +47,6 @@ public class Metrics {
         mLevel = "";
         mProbeTitle = "";
         mScaleTitle = "";
-        mMode = "";
-        mModes = new ArrayList<String>();
         mColor = new Color();
         mMin = 0;
         mMax = 0;
@@ -116,28 +107,6 @@ public class Metrics {
         this.mScaleTitle = scaleTitle;
     }
 
-    public String getMode() {
-        if (mMode == null) {
-            mMode = "";
-        }
-        return mMode;
-    }
-
-    public void setMode(String mode) {
-        this.mMode = mode;
-    }
-
-    public List<String> getModes() {
-        if (mModes == null) {
-            mModes = new ArrayList<String>();
-        }
-        return mModes;
-    }
-
-    public void setModes(List<String> modes) {
-        this.mModes = modes;
-    }
-
     public Color getColor() {
         if (mColor == null) {
             mColor = new Color();
@@ -179,7 +148,7 @@ public class Metrics {
     @Override
     public String toString() {
         return new ToStringBuilder(this).append("icon", mIcon).append("title", mTitle).append("level", mLevel)
-                .append("probeTitle", mProbeTitle).append("scaleTitle", mScaleTitle).append("mode", mMode)
-                .append("modes", mModes).append("color", mColor).append("min", mMin).append("max", mMax).toString();
+                .append("probeTitle", mProbeTitle).append("scaleTitle", mScaleTitle).append("color", mColor)
+                .append("min", mMin).append("max", mMax).toString();
     }
 }
