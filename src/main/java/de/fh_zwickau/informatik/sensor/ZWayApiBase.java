@@ -617,4 +617,9 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     public void getZWaveController(IZWayCallback<ZWaveController> callback) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public void getZWaveDeviceThermostatModeSet(int nodeId, int mode) {
+        throw new UnsupportedOperationException();
+    }
 }

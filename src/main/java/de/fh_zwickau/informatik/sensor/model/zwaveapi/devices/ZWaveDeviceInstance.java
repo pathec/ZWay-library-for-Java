@@ -13,47 +13,44 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * The {@link ZWaveDevice} represents a device from ZWave API. See also:
+ * The {@link ZWaveDeviceInstance} represents a device instance from ZWave API. See also:
  * http://docs.zwayhomeautomation.apiary.io/#
  *
  * @author Patrick Hecker - Initial contribution
  */
-public class ZWaveDevice {
-    @SerializedName("instances")
-    private ZWaveDeviceInstances mInstances;
+public class ZWaveDeviceInstance {
+    @SerializedName("commandClasses")
+    private ZWaveDeviceInstanceCommandClasses mCommandClasses;
     @SerializedName("data")
-    private ZWaveDeviceData mData;
+    private ZWaveDeviceInstanceData mData;
     @SerializedName("id")
     private Integer mId;
 
-    /**
-     * Instantiate a Z-Wave device object with default values.
-     */
-    public ZWaveDevice() {
-        mInstances = new ZWaveDeviceInstances();
-        mData = new ZWaveDeviceData();
+    public ZWaveDeviceInstance() {
+        mCommandClasses = new ZWaveDeviceInstanceCommandClasses();
+        mData = new ZWaveDeviceInstanceData();
         mId = -1;
     }
 
-    public ZWaveDeviceInstances getInstances() {
-        if (mInstances == null) {
-            mInstances = new ZWaveDeviceInstances();
+    public ZWaveDeviceInstanceCommandClasses getCommandClasses() {
+        if (mCommandClasses == null) {
+            mCommandClasses = new ZWaveDeviceInstanceCommandClasses();
         }
-        return mInstances;
+        return mCommandClasses;
     }
 
-    public void setInstances(ZWaveDeviceInstances instances) {
-        this.mInstances = instances;
+    public void setCommandClasses(ZWaveDeviceInstanceCommandClasses commandClasses) {
+        this.mCommandClasses = commandClasses;
     }
 
-    public ZWaveDeviceData getData() {
+    public ZWaveDeviceInstanceData getData() {
         if (mData == null) {
-            mData = new ZWaveDeviceData();
+            mData = new ZWaveDeviceInstanceData();
         }
         return mData;
     }
 
-    public void setData(ZWaveDeviceData data) {
+    public void setData(ZWaveDeviceInstanceData data) {
         this.mData = data;
     }
 
@@ -75,7 +72,7 @@ public class ZWaveDevice {
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("instances", mInstances).append("data", mData).append("id", mId)
-                .toString();
+        return new ToStringBuilder(this).append("id", mId).append("commandClasses", mCommandClasses)
+                .append("data", mData).toString();
     }
 }

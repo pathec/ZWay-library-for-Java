@@ -480,4 +480,10 @@ public interface IZWayApi {
      * @param corresponding value
      */
     void updateControllerData(String field, String value);
+
+    /**
+     * @param nodeId Z-Wave device node id
+     * @param mode thermostat mode
+     */
+    void getZWaveDeviceThermostatModeSet(int nodeId, int mode);
 }

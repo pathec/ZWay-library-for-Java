@@ -1274,6 +1274,61 @@ public class ZWayApiHttp extends ZWayApiBase {
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
 
+    @Override
+    public void getZWaveDeviceThermostatModeSet(int nodeId, int mode) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(httpClient);
+
+                String path = URLEncoder.encode(
+                        StringUtils.replace(ZWAVE_PATH_DEVICES_CC_THERMOSTAT_SET, "{nodeId}", String.valueOf(nodeId))
+                                .replace("{mode}", String.valueOf(mode)),
+                        "UTF-8");
+
+                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                        .header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getZWaveDeviceThermostatModeSet(nodeId, mode);
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return;
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getZWaveDeviceThermostatModeSet(nodeId, mode);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getZWaveInclusion(flag) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                stopHttpClient(httpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+    }
+
     /*********************
      ****** Utility ******
      ********************/

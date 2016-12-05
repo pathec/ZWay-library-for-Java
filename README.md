@@ -47,6 +47,12 @@ This project provides a Z-Way library for Java. The offical API description is a
 - `DeviceList` provides different ways to access the devices. Only devices which don't represent physical devices or only devices which do represent physical devices.
  - `getDevices()` returns a list with virtual devices which don't represent physical devices in Z-Wave network
  - `getDevicesGroupByNodeId()` returns a map (node id, device list) of virtual devices associated with a physical device
+ 
+### Command Class ThermostatMode
+- Load Z-Wave device: `api.getZWaveDevice(42)`
+- Get current thermostat mode: `device.getInstances().get0().getCommandClass().get64().getData().getMode().getValue()`
+- Get possible modes: `device.getInstances().get0().getCommandClass().get64().getThermostatModes()`
+- Set thermostat mode: `api.getZWaveDeviceThermostatModeSet(42, 1)`
 
 ## Supported device types
 
@@ -59,7 +65,7 @@ This project provides a Z-Way library for Java. The offical API description is a
 - SwitchMultilevel
 - SwitchRGBW
 - SwitchToggle (not tested)
-- Thermostat (not tested)
+- Thermostat
 - ToggleButton
 
 ## Dependencies
@@ -90,3 +96,6 @@ which accompanies this distribution, and is available at
 http://www.eclipse.org/legal/epl-v10.html
 
 This project uses 3rd party tools. You can find the list of 3rd party tools including their authors and licenses [here](LICENSE-3RD-PARTY.txt).
+
+<br>
+<img src="doc/BMWi_4C_Gef_en.jpg" width="200">
