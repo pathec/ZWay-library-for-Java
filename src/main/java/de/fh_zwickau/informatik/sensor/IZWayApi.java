@@ -366,16 +366,18 @@ public interface IZWayApi {
     // Notifications
 
     /**
+     * @param since UNIX timestamp
      * @return ZAutomation notification id
      */
-    NotificationList getNotifications();
+    NotificationList getNotifications(Integer since);
 
     /**
      * Asynchronous version of {@link #getNotifications()}
      *
      * @param callback contains the same data like synchronous return value
+     * @param since UNIX timestamp
      */
-    void getNotifications(IZWayCallback<NotificationList> callback);
+    void getNotifications(IZWayCallback<NotificationList> callback, Integer since);
 
     /**
      * @param notificationId ZAutomation notification id
@@ -486,4 +488,10 @@ public interface IZWayApi {
      * @param mode thermostat mode
      */
     void getZWaveDeviceThermostatModeSet(int nodeId, int mode);
+
+    String getZWaySessionId();
+
+    String getZWayRemoteSessionId();
+
+    void cancelCurrentRequest();
 }

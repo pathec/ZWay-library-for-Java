@@ -8,6 +8,48 @@
  */
 package de.fh_zwickau.informatik.sensor.model.notifications;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+/**
+ * The {@link NotificationList} represents a notification list. See also:
+ * http://docs.zwayhomeautomation.apiary.io/#
+ *
+ * @author Patrick Hecker - Initial contribution
+ */
 public class NotificationList {
-    // TODO
+    private List<Notification> mNotifications;
+
+    /**
+     * Instantiate a instance list with default values.
+     */
+    public NotificationList() {
+        mNotifications = new ArrayList<Notification>();
+    }
+
+    public void addNotification(Notification notification) {
+        mNotifications.add(notification);
+    }
+
+    public List<Notification> getNotifications() {
+        return mNotifications;
+    }
+
+    /**
+     * /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        ToStringBuilder toStringBuilder = new ToStringBuilder(this);
+        for (Notification notification : mNotifications) {
+            toStringBuilder.append(notification);
+        }
+
+        return new ToStringBuilder(this).append("notificationList", toStringBuilder.toString()).toString();
+    }
 }

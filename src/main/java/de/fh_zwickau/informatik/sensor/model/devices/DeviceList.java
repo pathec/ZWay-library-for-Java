@@ -48,6 +48,10 @@ public class DeviceList {
         return virtualDevices;
     }
 
+    public List<Device> getAllDevices() {
+        return mDevices;
+    }
+
     /**
      * Return the first occurrence of device
      *

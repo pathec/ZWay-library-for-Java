@@ -5,9 +5,10 @@ This project provides a Z-Way library for Java. The offical API description is a
 - GET login
 - GET instances
 - PUT instance
+- GET notifications
 - GET devices
 - GET device command
-- GET locations (only with id and title property)
+- GET locations (only with id, title and image property)
 - GET Z-Wave device (device model not complete)
 - other methods throw an `UnsupportedOperationException`
 
@@ -23,12 +24,14 @@ This project provides a Z-Way library for Java. The offical API description is a
 
 - Add library to your project ([Installation](#installation))
 - Choose a implementation for your project (currently there is only a HTTP implementation available `ZWayApiHttp`)
-- Create a instance of API: `IZWayApi mZWayApi = new ZWayApiHttp(ipAddress, port, protocol, username, password, caller);`
+- Create a instance of API: `IZWayApi mZWayApi = new ZWayApiHttp(ipAddress, port, protocol, username, password, remoteId, useRemoteService, caller);`
  - IP address: Z-Way server address
  - port: Z-Way server port (default: 8083)
  - protocol: http/https
  - username (default: admin)
  - password (default: admin)
+ - remote id
+ - use remote service: true/false enables another login implementation
  - caller must implement the `IZWayApiCallbacks` interface to receive asynchronous callbacks
 
 ### GET login
@@ -57,14 +60,14 @@ This project provides a Z-Way library for Java. The offical API description is a
 ## Supported device types
 
 - Battery
-- Doorlock (not tested)
+- Doorlock
 - SensorBinary
 - SensorMultilevel
 - SwitchBinary
 - SwitchControl
 - SwitchMultilevel
 - SwitchRGBW
-- SwitchToggle (not tested)
+- SwitchToggle
 - Thermostat
 - ToggleButton
 
@@ -76,6 +79,9 @@ This project provides a Z-Way library for Java. The offical API description is a
 - Jetty :: Http Utility (org.eclipse.jetty:jetty-http:9.3.11.v20160721 - http://www.eclipse.org/jetty)
 - Jetty :: IO Utility (org.eclipse.jetty:jetty-io:9.3.11.v20160721 - http://www.eclipse.org/jetty)
 - Jetty :: Utilities (org.eclipse.jetty:jetty-util:9.3.11.v20160721 - http://www.eclipse.org/jetty)
+- Jetty :: WebSocket :: API (org.eclipse.jetty.websocket:websocket-api:9.3.12.v20160915 - http://www.eclipse.org/jetty)
+- Jetty :: WebSocket :: Client (org.eclipse.jetty.websocket:websocket-client:9.3.12.v20160915 - http://www.eclipse.org/jetty)
+- Jetty :: WebSocket :: Common (org.eclipse.jetty.websocket:websocket-common:9.3.12.v20160915 - http://www.eclipse.org/jetty)
 - SLF4J API Module (org.slf4j:slf4j-api:1.7.21 - http://www.slf4j.org)
 
 ## Contributing

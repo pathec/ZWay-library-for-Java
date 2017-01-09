@@ -49,15 +49,21 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     protected String mUsername;
     protected String mPassword;
 
+    protected Integer mRemoteId;
+    protected Boolean mUseRemoteService;
+
     protected IZWayApiCallbacks mCaller;
 
     /**
-     * Usage of Z-Way Session Id
+     * Usage of Z-Way Session Id for local connection
      *
      * Response response = client.target(mConfig.getTopLevelUrl() + ZWAY_ZAUTOMATION_PATH_STATUS)
      * .request(MediaType.TEXT_PLAIN_TYPE).cookie("ZWAYSession", zwaySessionId).get();
+     *
+     * Contains Session Id for local or remote connection depending on remote usage flag.
      */
     protected String mZWaySessionId;
+    protected String mZWayRemoteSessionId;
 
     /**
      * Setup the Z-Way API with passed values.
@@ -67,21 +73,33 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
      * @param protocol protocol
      * @param username username
      * @param password password
+     * @param remoteId remote id
+     * @param useRemoteService
      * @param caller receive callbacks
      */
     public ZWayApiBase(String ipAddress, Integer port, String protocol, String username, String password,
-            IZWayApiCallbacks caller) {
+            Integer remoteId, Boolean useRemoteService, IZWayApiCallbacks caller) {
         mIpAddress = ipAddress;
         mPort = port;
         mProtocol = protocol;
         mUsername = username;
         mPassword = password;
 
-        logger.debug("ZWayApi initialized: " + getTopLevelUrl() + " with: " + mUsername + "/" + mPassword);
+        mRemoteId = remoteId;
+        mUseRemoteService = useRemoteService;
+
+        if (mUseRemoteService) {
+            logger.debug("ZWayApi for remote connection initialized: " + getTopLevelUrl() + " with: " + mUsername + "/"
+                    + mPassword);
+        } else {
+            logger.debug("ZWayApi for local connection initialized: " + getTopLevelUrl() + " with: " + mUsername + "/"
+                    + mPassword);
+        }
 
         mCaller = caller;
 
         mZWaySessionId = null;
+        mZWayRemoteSessionId = null;
     }
 
     /**
@@ -418,7 +436,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public NotificationList getNotifications() {
+    public NotificationList getNotifications(Integer since) {
         throw new UnsupportedOperationException();
     }
 
@@ -584,7 +602,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public void getNotifications(IZWayCallback<NotificationList> callback) {
+    public void getNotifications(IZWayCallback<NotificationList> callback, Integer since) {
         throw new UnsupportedOperationException();
     }
 
@@ -620,6 +638,21 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     @Override
     public void getZWaveDeviceThermostatModeSet(int nodeId, int mode) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public String getZWaySessionId() {
+        return mZWaySessionId;
+    }
+
+    @Override
+    public String getZWayRemoteSessionId() {
+        return mZWayRemoteSessionId;
+    }
+
+    @Override
+    public void cancelCurrentRequest() {
         throw new UnsupportedOperationException();
     }
 }

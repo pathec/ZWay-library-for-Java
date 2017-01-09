@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.1.9] - 2017-01-09
+### Added
+- User image field to location
+- Notification API
+- Remote access, for example with find.z-wave.me as intermediary
+
+### Changed
+- Add since parameter to notification API
+
+### Fixed
+- Add getter and setter for device tags
+
+## [0.1.8] - 2016-12-22
+### Added
+- WebSocket support
+
 ## [0.1.7] - 2016-12-07
 ### Added
 - Support for command class ThermostatMode (ZWaveAPI)

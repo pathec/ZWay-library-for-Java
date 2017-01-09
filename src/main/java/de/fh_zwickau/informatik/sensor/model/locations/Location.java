@@ -23,6 +23,8 @@ public class Location {
     private Integer mId;
     @SerializedName("title")
     private String mTitle;
+    @SerializedName("user_img")
+    private String mUserImg;
 
     /**
      * Instantiate a location with default values.
@@ -30,6 +32,7 @@ public class Location {
     public Location() {
         mId = -1;
         mTitle = "";
+        mUserImg = "";
     }
 
     public Integer getId() {
@@ -54,6 +57,17 @@ public class Location {
         this.mTitle = title;
     }
 
+    public String getUserImg() {
+        if (mUserImg == null) {
+            mUserImg = "";
+        }
+        return mUserImg;
+    }
+
+    public void setUserImg(String userImg) {
+        this.mUserImg = userImg;
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -61,6 +75,7 @@ public class Location {
      */
     @Override
     public String toString() {
-        return new ToStringBuilder(this).append("id", mId).append("title", mTitle).toString();
+        return new ToStringBuilder(this).append("id", mId).append("title", mTitle).append("userImg", mUserImg)
+                .toString();
     }
 }

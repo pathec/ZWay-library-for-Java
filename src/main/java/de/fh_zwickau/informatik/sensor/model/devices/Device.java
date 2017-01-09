@@ -244,6 +244,14 @@ public abstract class Device {
         return -1;
     }
 
+    public List<String> getTags() {
+        return this.mTags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.mTags = tags;
+    }
+
     /**
      * Set a Z-Way command handler.
      *

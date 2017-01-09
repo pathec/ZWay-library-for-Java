@@ -240,4 +240,12 @@ public interface IZWayApiCallbacks {
      * @param invalidApiState message indicates a fault in the system or Z-Way server
      */
     void responseFormatError(String message, boolean invalidApiState);
+
+    /**
+     * This function provides internal messages.
+     *
+     * @param code
+     * @param message
+     */
+    void message(int code, String message);
 }

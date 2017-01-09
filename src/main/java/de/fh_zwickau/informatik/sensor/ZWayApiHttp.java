@@ -11,8 +11,11 @@ package de.fh_zwickau.informatik.sensor;
 import static de.fh_zwickau.informatik.sensor.ZWayConstants.*;
 
 import java.io.UnsupportedEncodingException;
+import java.net.CookieStore;
 import java.net.HttpCookie;
+import java.net.URI;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +30,7 @@ import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +48,8 @@ import de.fh_zwickau.informatik.sensor.model.instances.InstanceListDeserializer;
 import de.fh_zwickau.informatik.sensor.model.locations.LocationList;
 import de.fh_zwickau.informatik.sensor.model.locations.LocationListDeserializer;
 import de.fh_zwickau.informatik.sensor.model.login.LoginForm;
+import de.fh_zwickau.informatik.sensor.model.notifications.NotificationList;
+import de.fh_zwickau.informatik.sensor.model.notifications.NotificationListDeserializer;
 import de.fh_zwickau.informatik.sensor.model.zwaveapi.controller.ZWaveController;
 import de.fh_zwickau.informatik.sensor.model.zwaveapi.devices.ZWaveDevice;
 
@@ -58,7 +64,7 @@ public class ZWayApiHttp extends ZWayApiBase {
 
     private final static int HTTP_CLIENT_TIMEOUT = 5000;
 
-    private HttpClient httpClient = null;
+    private HttpClient mHttpClient = null;
 
     /**
      * Setup the Z-Way API with passed values.
@@ -68,15 +74,22 @@ public class ZWayApiHttp extends ZWayApiBase {
      * @param protocol protocol
      * @param username username
      * @param password password
+     * @param remoteId remote id
+     * @param useRemoteService
      * @param caller receive callbacks
      */
     public ZWayApiHttp(String ipAddress, Integer port, String protocol, String username, String password,
-            IZWayApiCallbacks caller) {
+            Integer remoteId, Boolean useRemoteService, IZWayApiCallbacks caller) {
 
-        super(ipAddress, port, protocol, username, password, caller);
+        super(ipAddress, port, protocol, username, password, remoteId, useRemoteService, caller);
 
-        httpClient = new HttpClient();
-        httpClient.setConnectTimeout(HTTP_CLIENT_TIMEOUT);
+        if (protocol.equals("http")) {
+            mHttpClient = new HttpClient();
+        } else if (protocol.equals("https")) {
+            mHttpClient = new HttpClient(new SslContextFactory());
+        }
+
+        mHttpClient.setConnectTimeout(HTTP_CLIENT_TIMEOUT);
     }
 
     /*
@@ -87,48 +100,94 @@ public class ZWayApiHttp extends ZWayApiBase {
     @Override
     public synchronized String getLogin() {
         try {
-            startHttpClient(httpClient);
+            startHttpClient(mHttpClient);
 
-            // Build request body
-            LoginForm loginForm = new LoginForm(true, mUsername, mPassword, false, 1);
+            if (mUseRemoteService) {
+                mZWaySessionId = null;
+                mZWayRemoteSessionId = null;
 
-            Request request = httpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_LOGIN)
-                    .method(HttpMethod.POST).header(HttpHeader.ACCEPT, "application/json")
-                    .header(HttpHeader.CONTENT_TYPE, "application/json")
-                    .content(new StringContentProvider(new Gson().toJson(loginForm)), "application/json");
+                // Build request body
+                String body = "act=login&login=" + mRemoteId + "/" + mUsername + "&pass=" + mPassword;
 
-            ContentResponse response = request.send();
+                logger.info("Remote login body: {}", body);
+                logger.info("Remote path: {}", getTopLevelUrl() + "/" + REMOTE_PATH_LOGIN);
 
-            // Check HTTP status code
-            int statusCode = response.getStatus();
-            if (statusCode != HttpStatus.OK_200) {
-                String reason = response.getReason();
-                mCaller.httpStatusError(statusCode, reason, true);
-                logger.debug("Communication with Z-Way server failed: {} {}", statusCode, reason);
-            }
+                Request request = mHttpClient.newRequest(getTopLevelUrl() + "/" + REMOTE_PATH_LOGIN)
+                        .method(HttpMethod.POST).header(HttpHeader.CONTENT_TYPE, "application/x-www-form-urlencoded")
+                        .content(new StringContentProvider(body), "application/x-www-form-urlencoded");
 
-            String responseBody = response.getContentAsString();
-            try {
-                Gson gson = new Gson();
-                // Response -> String -> Json -> extract data field
-                JsonObject responseDataAsJson = gson.fromJson(responseBody, JsonObject.class).get("data")
-                        .getAsJsonObject(); // extract data field
+                ContentResponse response = request.send();
 
-                mZWaySessionId = responseDataAsJson.get("sid").getAsString(); // extract SID field
-                mCaller.getLoginResponse(mZWaySessionId);
-                return mZWaySessionId;
-            } catch (JsonParseException e) {
-                logger.warn("Unexpected response format: {}", e.getMessage());
-                mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), true);
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+
+                if (statusCode != HttpStatus.OK_200) {
+                    String reason = response.getReason();
+                    mCaller.httpStatusError(statusCode, reason, true);
+                    logger.debug("Communication with Z-Way server failed: {} {}", statusCode, reason);
+                }
+
+                CookieStore cookieStore = mHttpClient.getCookieStore();
+                List<HttpCookie> cookies = cookieStore.get(URI.create("https://find.z-wave.me/"));
+                for (HttpCookie cookie : cookies) {
+                    if (cookie.getName().equals("ZWAYSession")) {
+                        mZWaySessionId = cookie.getValue();
+                    } else if (cookie.getName().equals("ZBW_SESSID")) {
+                        mZWayRemoteSessionId = cookie.getValue();
+                    }
+                    logger.info("HTTP cookie: {} - {}", cookie.getName(), cookie.getValue());
+                }
+
+                if (mZWayRemoteSessionId != null && mZWaySessionId != null) {
+                    mCaller.getLoginResponse(mZWaySessionId);
+                    return mZWaySessionId;
+                } else {
+                    logger.warn("Response doesn't contain required cookies");
+                    mCaller.responseFormatError("Response doesn't contain required cookies", true);
+                }
+            } else {
+                // Build request body
+                LoginForm loginForm = new LoginForm(true, mUsername, mPassword, false, 1);
+
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_LOGIN)
+                        .method(HttpMethod.POST).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .content(new StringContentProvider(new Gson().toJson(loginForm)), "application/json");
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    String reason = response.getReason();
+                    mCaller.httpStatusError(statusCode, reason, true);
+                    logger.debug("Communication with Z-Way server failed: {} {}", statusCode, reason);
+                }
+
+                String responseBody = response.getContentAsString();
+                try {
+                    Gson gson = new Gson();
+                    // Response -> String -> Json -> extract data field
+                    JsonObject responseDataAsJson = gson.fromJson(responseBody, JsonObject.class).get("data")
+                            .getAsJsonObject(); // extract data field
+
+                    mZWaySessionId = responseDataAsJson.get("sid").getAsString(); // extract SID field
+                    mCaller.getLoginResponse(mZWaySessionId);
+                    return mZWaySessionId;
+                } catch (JsonParseException e) {
+                    logger.warn("Unexpected response format: {}", e.getMessage());
+                    mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), true);
+                }
             }
         } catch (Exception e) {
             logger.warn("Request getLogin() failed: {}", e.getMessage());
             mCaller.apiError(e.getMessage(), true);
         } finally {
-            stopHttpClient(httpClient);
+            stopHttpClient(mHttpClient);
         }
 
         mZWaySessionId = null;
+        mZWayRemoteSessionId = null;
         mCaller.authenticationError();
         return null;
     }
@@ -142,12 +201,16 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized InstanceList getInstances() {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
-                Request request = httpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 ContentResponse response = request.send();
 
@@ -183,7 +246,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(httpClient);
+                stopHttpClient(mHttpClient);
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -199,13 +262,17 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getInstances(final IZWayCallback<InstanceList> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
-                Request request = httpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
                         .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 request.send(new BufferingResponseListener() {
                     @Override
@@ -238,7 +305,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getLogin(callback) failed: {}", e.getMessage());
+                    logger.warn("Request getInstances(callback) failed: {}", e.getMessage());
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
@@ -272,12 +339,16 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized LocationList getLocations() {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
-                Request request = httpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_LOCATIONS)
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_LOCATIONS)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 ContentResponse response = request.send();
 
@@ -309,11 +380,11 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getInstances() failed: {}", e.getMessage());
+                    logger.warn("Request getLocations() failed: {}", e.getMessage());
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(httpClient);
+                stopHttpClient(mHttpClient);
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -329,13 +400,17 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getLocations(final IZWayCallback<LocationList> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
-                Request request = httpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
                         .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 request.send(new BufferingResponseListener() {
                     @Override
@@ -368,7 +443,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getLogin(callback) failed: {}", e.getMessage());
+                    logger.warn("Request getLocations(callback) failed: {}", e.getMessage());
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
@@ -396,6 +471,147 @@ public class ZWayApiHttp extends ZWayApiBase {
     /*
      * (non-Javadoc)
      *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getInstances()
+     */
+    @Override
+    public synchronized NotificationList getNotifications(Integer since) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient
+                        .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_NOTIFICATIONS + "?since=" + since)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getNotifications(since);
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return parseGetNotifications(response.getContentAsString());
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getNotifications(since);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getNotifications() failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                stopHttpClient(mHttpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getInstances(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
+    @Override
+    public void getNotifications(final IZWayCallback<NotificationList> callback, final Integer since) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient
+                        .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_NOTIFICATIONS + "?since=" + since)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
+                        .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                request.send(new BufferingResponseListener() {
+                    @Override
+                    public void onComplete(Result result) {
+                        int statusCode = result.getResponse().getStatus();
+                        if (statusCode != HttpStatus.OK_200) {
+                            if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                                if (getLogin() == null) {
+                                    mCaller.authenticationError();
+                                } else {
+                                    getNotifications(callback, since);
+                                }
+                            } else {
+                                processResponseStatus(statusCode);
+                            }
+                        } else {
+                            callback.onSuccess(parseGetNotifications(getContentAsString()));
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getNotifications(callback, since);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getNotifications(callback) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                // do not stop http client for asynchronous call
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+    }
+
+    private synchronized NotificationList parseGetNotifications(String data) {
+        // Request performed successfully: load response body
+        // Expected response format: { "data": "notifications": [...], ... }, ... }
+        try {
+            Gson gson = new Gson();
+            // Response -> String -> Json -> extract data field -> extract notifications field
+            JsonArray notificationsAsJson = gson.fromJson(data, JsonObject.class).get("data").getAsJsonObject()
+                    .get("notifications").getAsJsonArray();
+
+            return new NotificationListDeserializer().deserializeNotificationList(notificationsAsJson);
+        } catch (JsonParseException e) {
+            logger.warn("Unexpected response format: {}", e.getMessage());
+            mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
+            return null;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see
      * de.fh_zwickau.informatik.sensor.ZWayApiBase#putInstance(de.fh_zwickau.informatik.sensor.model.instances.Instance)
      */
@@ -403,14 +619,18 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized Instance putInstance(Instance instance) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
-                Request request = httpClient
+                Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES + "/" + instance.getId())
                         .method(HttpMethod.PUT).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
                         .content(new StringContentProvider(new Gson().toJson(instance)), "application/json");
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 ContentResponse response = request.send();
 
@@ -446,7 +666,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(httpClient);
+                stopHttpClient(mHttpClient);
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -464,15 +684,19 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void putInstance(final Instance instance, final IZWayCallback<Instance> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
-                Request request = httpClient
+                Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES + "/" + instance.getId())
                         .method(HttpMethod.PUT).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
                         .content(new StringContentProvider(new Gson().toJson(instance)), "application/json")
                         .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 request.send(new BufferingResponseListener() {
                     @Override
@@ -540,12 +764,20 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized DeviceList getDevices() {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
-                Request request = httpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES)
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 ContentResponse response = request.send();
 
@@ -581,7 +813,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(httpClient);
+                stopHttpClient(mHttpClient);
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -597,13 +829,17 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getDevices(final IZWayCallback<DeviceList> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
-                Request request = httpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES)
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
                         .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 request.send(new BufferingResponseListener() {
                     @Override
@@ -673,17 +909,21 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized String getDeviceCommand(DeviceCommand command) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
                 String path = buildGetDeviceCommandPath(command);
                 if (path == null) {
                     return "Device command parameter invalid";
                 }
 
-                Request request = httpClient.newRequest(getZAutomationTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + path).method(HttpMethod.GET)
                         .header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 ContentResponse response = request.send();
 
@@ -720,7 +960,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(httpClient);
+                stopHttpClient(mHttpClient);
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -737,7 +977,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getDeviceCommand(final DeviceCommand command, final IZWayCallback<String> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
                 String path = buildGetDeviceCommandPath(command);
                 if (path == null) {
@@ -745,11 +985,15 @@ public class ZWayApiHttp extends ZWayApiBase {
                     return;
                 }
 
-                Request request = httpClient.newRequest(getZAutomationTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + path).method(HttpMethod.GET)
                         .header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
                         .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 request.send(new BufferingResponseListener() {
                     @Override
@@ -851,15 +1095,19 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized ZWaveDevice getZWaveDevice(int nodeId) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
                 String path = URLEncoder
                         .encode(StringUtils.replace(ZWAVE_PATH_DEVICES, "{nodeId}", String.valueOf(nodeId)), "UTF-8");
 
-                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                Request request = mHttpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
                         .header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 ContentResponse response = request.send();
 
@@ -895,7 +1143,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(httpClient);
+                stopHttpClient(mHttpClient);
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -912,16 +1160,20 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getZWaveDevice(final int nodeId, final IZWayCallback<ZWaveDevice> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
                 String path = URLEncoder
                         .encode(StringUtils.replace(ZWAVE_PATH_DEVICES, "{nodeId}", String.valueOf(nodeId)), "UTF-8");
 
-                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                Request request = mHttpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
                         .header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
                         .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 request.send(new BufferingResponseListener() {
                     @Override
@@ -986,12 +1238,16 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized ZWaveController getZWaveController() {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
-                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + ZWAVE_PATH_CONTROLLER)
+                Request request = mHttpClient.newRequest(getZWaveTopLevelUrl() + "/" + ZWAVE_PATH_CONTROLLER)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 ContentResponse response = request.send();
 
@@ -1027,7 +1283,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(httpClient);
+                stopHttpClient(mHttpClient);
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -1044,13 +1300,17 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getZWaveController(final IZWayCallback<ZWaveController> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
-                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + ZWAVE_PATH_CONTROLLER)
+                Request request = mHttpClient.newRequest(getZWaveTopLevelUrl() + "/" + ZWAVE_PATH_CONTROLLER)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
                         .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 request.send(new BufferingResponseListener() {
                     @Override
@@ -1115,15 +1375,19 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized void getZWaveInclusion(int flag) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
                 String path = URLEncoder
                         .encode(StringUtils.replace(ZWAVE_PATH_INCLUSION, "{flag}", String.valueOf(flag)), "UTF-8");
 
-                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                Request request = mHttpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
                         .header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 ContentResponse response = request.send();
 
@@ -1159,7 +1423,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(httpClient);
+                stopHttpClient(mHttpClient);
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
@@ -1173,15 +1437,19 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized void getZWaveExclusion(int flag) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
                 String path = URLEncoder
                         .encode(StringUtils.replace(ZWAVE_PATH_EXCLUSION, "{flag}", String.valueOf(flag)), "UTF-8");
 
-                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                Request request = mHttpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
                         .header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 ContentResponse response = request.send();
 
@@ -1217,7 +1485,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(httpClient);
+                stopHttpClient(mHttpClient);
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
@@ -1226,14 +1494,18 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void updateControllerData(String field, String value) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
                 String path = URLEncoder.encode(ZWAVE_PATH_CONTROLLER_DATA + "." + field + "=" + value, "UTF-8");
 
-                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                Request request = mHttpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
                         .header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 ContentResponse response = request.send();
 
@@ -1269,7 +1541,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(httpClient);
+                stopHttpClient(mHttpClient);
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
@@ -1278,17 +1550,21 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getZWaveDeviceThermostatModeSet(int nodeId, int mode) {
         if (checkLogin()) {
             try {
-                startHttpClient(httpClient);
+                startHttpClient(mHttpClient);
 
                 String path = URLEncoder.encode(
                         StringUtils.replace(ZWAVE_PATH_DEVICES_CC_THERMOSTAT_SET, "{nodeId}", String.valueOf(nodeId))
                                 .replace("{mode}", String.valueOf(mode)),
                         "UTF-8");
 
-                Request request = httpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
+                Request request = mHttpClient.newRequest(getZWaveTopLevelUrl() + "/" + path).method(HttpMethod.GET)
                         .header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
 
                 ContentResponse response = request.send();
 
@@ -1324,7 +1600,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(httpClient);
+                stopHttpClient(mHttpClient);
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }

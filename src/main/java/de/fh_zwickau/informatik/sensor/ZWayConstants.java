@@ -27,6 +27,8 @@ public class ZWayConstants {
     public static final String PATH_NOTIFICATIONS = "notifications";
     public static final String PATH_DEVICE_HISTORY = "history";
 
+    public static final String REMOTE_PATH_LOGIN = "zboxweb";
+
     public static final String ZWAVE_PATH_DEVICES = "devices[{nodeId}]";
     public static final String ZWAVE_PATH_CONTROLLER = "controller";
     public static final String ZWAVE_PATH_INCLUSION = "controller.AddNodeToNetwork({flag})";
