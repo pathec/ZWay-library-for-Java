@@ -8,10 +8,15 @@
  */
 package de.fh_zwickau.informatik.sensor.model.notifications;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+
+import de.fh_zwickau.informatik.sensor.ZWayConstants;
 
 /**
  * The {@link NotificationListDeserializer} build a notification list based on JSON data. See
@@ -20,6 +25,9 @@ import com.google.gson.JsonElement;
  * @author Patrick Hecker - Initial contribution
  */
 public class NotificationListDeserializer {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     /**
      * @param notificationsAsJson notification list as JSON data
      * @return notification list
@@ -45,7 +53,15 @@ public class NotificationListDeserializer {
     public Notification deserializeNotification(JsonElement notificationAsJson) {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
 
-        Notification notification = gson.fromJson(notificationAsJson, Notification.class);
+        String notificationType = notificationAsJson.getAsJsonObject().get("level").getAsString();
+        Notification notification = null;
+        switch (notificationType) {
+            case ZWayConstants.NOTIFICATION_TYPE_DEVICE_INFO:
+                notification = gson.fromJson(notificationAsJson, Notification.class);
+                break;
+            default:
+                logger.debug("Unknown notification type: " + notificationType);
+        }
 
         return notification;
     }

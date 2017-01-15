@@ -775,10 +775,6 @@ public class ZWayApiHttp extends ZWayApiBase {
                     request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
                 }
 
-                if (mUseRemoteService) {
-                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
-                }
-
                 ContentResponse response = request.send();
 
                 // Check HTTP status code
@@ -916,8 +912,8 @@ public class ZWayApiHttp extends ZWayApiBase {
                     return "Device command parameter invalid";
                 }
 
-                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + path).method(HttpMethod.GET)
-                        .header(HttpHeader.ACCEPT, "application/json")
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + path)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
 
@@ -985,8 +981,8 @@ public class ZWayApiHttp extends ZWayApiBase {
                     return;
                 }
 
-                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + path).method(HttpMethod.GET)
-                        .header(HttpHeader.ACCEPT, "application/json")
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + path)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
                         .header(HttpHeader.CONTENT_TYPE, "application/json")
                         .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
                         .onRequestFailure(new ZWayFailureListener());
