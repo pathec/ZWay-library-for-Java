@@ -50,6 +50,9 @@ import de.fh_zwickau.informatik.sensor.model.locations.LocationListDeserializer;
 import de.fh_zwickau.informatik.sensor.model.login.LoginForm;
 import de.fh_zwickau.informatik.sensor.model.notifications.NotificationList;
 import de.fh_zwickau.informatik.sensor.model.notifications.NotificationListDeserializer;
+import de.fh_zwickau.informatik.sensor.model.profiles.Profile;
+import de.fh_zwickau.informatik.sensor.model.profiles.ProfileList;
+import de.fh_zwickau.informatik.sensor.model.profiles.ProfileListDeserializer;
 import de.fh_zwickau.informatik.sensor.model.zwaveapi.controller.ZWaveController;
 import de.fh_zwickau.informatik.sensor.model.zwaveapi.devices.ZWaveDevice;
 
@@ -195,6 +198,83 @@ public class ZWayApiHttp extends ZWayApiBase {
     /*
      * (non-Javadoc)
      *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getCurrentProfile()
+     */
+    @Override
+    public synchronized Profile getCurrentProfile() {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                // Build request body
+                LoginForm loginForm = new LoginForm(true, mUsername, mPassword, false, 1);
+
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_LOGIN)
+                        .method(HttpMethod.POST).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .content(new StringContentProvider(new Gson().toJson(loginForm)), "application/json");
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getCurrentProfile();
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+
+                }
+
+                String responseBody = response.getContentAsString();
+                try {
+                    Gson gson = new Gson();
+                    // Response -> String -> Json -> extract data field
+                    JsonObject profileAsJson = gson.fromJson(responseBody, JsonObject.class).get("data")
+                            .getAsJsonObject(); // extract data field
+
+                    return new ProfileListDeserializer().deserializeProfile(profileAsJson);
+                } catch (JsonParseException e) {
+                    logger.warn("Unexpected response format: {}", e.getMessage());
+                    mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), true);
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getCurrentProfile();
+                        }
+                    }
+                } else {
+                    logger.warn("Request getCurrentProfile() failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                stopHttpClient(mHttpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getInstances()
      */
     @Override
@@ -333,7 +413,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     /*
      * (non-Javadoc)
      *
-     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getInstances()
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getLocations()
      */
     @Override
     public synchronized LocationList getLocations() {
@@ -394,7 +474,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     /*
      * (non-Javadoc)
      *
-     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getInstances(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getLocations(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
     public void getLocations(final IZWayCallback<LocationList> callback) {
@@ -471,7 +551,145 @@ public class ZWayApiHttp extends ZWayApiBase {
     /*
      * (non-Javadoc)
      *
-     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getInstances()
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getProfiles()
+     */
+    @Override
+    public synchronized ProfileList getProfiles() {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_PROFILES)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getProfiles();
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return parseGetProfiles(response.getContentAsString());
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getProfiles();
+                        }
+                    }
+                } else {
+                    logger.warn("Request getProfiles() failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                stopHttpClient(mHttpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getProfiles(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
+    @Override
+    public void getProfiles(final IZWayCallback<ProfileList> callback) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_PROFILES)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
+                        .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                request.send(new BufferingResponseListener() {
+                    @Override
+                    public void onComplete(Result result) {
+                        int statusCode = result.getResponse().getStatus();
+                        if (statusCode != HttpStatus.OK_200) {
+                            if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                                if (getLogin() == null) {
+                                    mCaller.authenticationError();
+                                } else {
+                                    getProfiles(callback);
+                                }
+                            } else {
+                                processResponseStatus(statusCode);
+                            }
+                        } else {
+                            callback.onSuccess(parseGetProfiles(getContentAsString()));
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getProfiles(callback);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getProfiles(callback) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                // do not stop http client for asynchronous call
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+    }
+
+    private synchronized ProfileList parseGetProfiles(String data) {
+        // Request performed successfully: load response body
+        // Expected response format: { "data": [...] }, ... }
+        try {
+            Gson gson = new Gson();
+            // Response -> String -> Json -> extract data field
+            JsonArray profilesAsJson = gson.fromJson(data, JsonObject.class).get("data").getAsJsonArray();
+
+            return new ProfileListDeserializer().deserializeProfileList(profilesAsJson);
+        } catch (JsonParseException e) {
+            logger.warn("Unexpected response format: {}", e.getMessage());
+            mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
+            return null;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getNotifications()
      */
     @Override
     public synchronized NotificationList getNotifications(Integer since) {
@@ -533,7 +751,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     /*
      * (non-Javadoc)
      *
-     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getInstances(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getNotifications(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
     public void getNotifications(final IZWayCallback<NotificationList> callback, final Integer since) {

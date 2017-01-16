@@ -6,6 +6,7 @@ This project provides a Z-Way library for Java. The offical API description is a
 - GET instances
 - PUT instance
 - GET notifications
+- GET profiles
 - GET devices
 - GET device command
 - GET locations (only with id, title and image property)

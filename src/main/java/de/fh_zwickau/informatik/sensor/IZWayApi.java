@@ -73,6 +73,12 @@ public interface IZWayApi {
 
     // no asynchronous version for login call
 
+    // Current profile
+    /**
+     * @return ZAutomation profile
+     */
+    Profile getCurrentProfile();
+
     // Namespaces
     /**
      * @return ZAutomation namespace list

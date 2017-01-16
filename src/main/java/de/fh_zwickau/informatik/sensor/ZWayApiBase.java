@@ -331,6 +331,11 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
+    public Profile getCurrentProfile() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public NamespaceList getNamespaces() {
         throw new UnsupportedOperationException();
     }
