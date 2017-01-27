@@ -10,6 +10,7 @@ This project provides a Z-Way library for Java. The offical API description is a
 - GET devices
 - GET device command
 - GET locations (only with id, title and image property)
+- GET device history
 - GET Z-Wave device (device model not complete)
 - other methods throw an `UnsupportedOperationException`
 

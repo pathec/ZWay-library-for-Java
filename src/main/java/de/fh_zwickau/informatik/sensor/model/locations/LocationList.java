@@ -23,7 +23,7 @@ public class LocationList {
     private List<Location> mLocations;
 
     /**
-     * Instantiate a instance list with default values.
+     * Instantiate a location list with default values.
      */
     public LocationList() {
         mLocations = new ArrayList<Location>();
