@@ -20,23 +20,23 @@ import com.google.gson.annotations.SerializedName;
  */
 public class DeviceHistoryData {
     @SerializedName("id")
-    private Integer mId;
+    private Long mId;
     @SerializedName("l")
     private String mLevel;
 
     public DeviceHistoryData() {
-        mId = -1;
+        mId = -1l;
         mLevel = "";
     }
 
-    public Integer getId() {
+    public Long getId() {
         if (mId == null) {
-            mId = -1;
+            mId = -1l;
         }
         return mId;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.mId = id;
     }
 
