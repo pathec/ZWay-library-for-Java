@@ -6,7 +6,7 @@
 	<groupId>de.fh_zwickau.informatik.sensor</groupId>
 	<artifactId>zway-lib</artifactId>
 	<packaging>jar</packaging>
-	<version>0.2.1-SNAPSHOT</version>
+	<version>0.2.2-SNAPSHOT</version>
 
 	<name>Z-Way Library for Java</name>
 	<url>http://sensor.fh-zwickau.de</url>

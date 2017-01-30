@@ -834,7 +834,7 @@ public class ZWayApiHttp extends ZWayApiBase {
      * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getNotifications()
      */
     @Override
-    public synchronized NotificationList getNotifications(Integer since) {
+    public synchronized NotificationList getNotifications(Long since) {
         if (checkLogin()) {
             try {
                 startHttpClient(mHttpClient);
@@ -896,7 +896,7 @@ public class ZWayApiHttp extends ZWayApiBase {
      * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getNotifications(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
-    public void getNotifications(final IZWayCallback<NotificationList> callback, final Integer since) {
+    public void getNotifications(final IZWayCallback<NotificationList> callback, final Long since) {
         if (checkLogin()) {
             try {
                 startHttpClient(mHttpClient);

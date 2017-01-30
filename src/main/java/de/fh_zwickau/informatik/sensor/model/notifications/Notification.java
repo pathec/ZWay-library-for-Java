@@ -22,7 +22,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Notification {
     @SerializedName("id")
-    private Integer mId;
+    private Long mId;
     @SerializedName("timestamp")
     private Date mTimestamp;
     @SerializedName("level")
@@ -38,7 +38,7 @@ public class Notification {
      * Instantiate a notification with default values.
      */
     public Notification() {
-        mId = -1;
+        mId = -1l;
         mTimestamp = new Date();
         mLevel = "";
         mMessage = new Message();
@@ -46,14 +46,14 @@ public class Notification {
         mSource = "";
     }
 
-    public Integer getId() {
+    public Long getId() {
         if (mId == null) {
-            mId = -1;
+            mId = -1l;
         }
         return mId;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.mId = id;
     }
 

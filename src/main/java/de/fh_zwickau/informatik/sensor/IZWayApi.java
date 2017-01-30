@@ -375,7 +375,7 @@ public interface IZWayApi {
      * @param since UNIX timestamp
      * @return ZAutomation notification id
      */
-    NotificationList getNotifications(Integer since);
+    NotificationList getNotifications(Long since);
 
     /**
      * Asynchronous version of {@link #getNotifications()}
@@ -383,13 +383,13 @@ public interface IZWayApi {
      * @param callback contains the same data like synchronous return value
      * @param since UNIX timestamp
      */
-    void getNotifications(IZWayCallback<NotificationList> callback, Integer since);
+    void getNotifications(IZWayCallback<NotificationList> callback, Long since);
 
     /**
      * @param notificationId ZAutomation notification id
      * @return ZAutomation notification
      */
-    Notification getNotification(String notificationId);
+    Notification getNotification(Long notificationId);
 
     /**
      * Asynchronous version of {@link #getNotification(String)}
@@ -397,7 +397,7 @@ public interface IZWayApi {
      * @param notificationId ZAutomation notification id
      * @param callback contains the same data like synchronous return value
      */
-    void getNotification(String notificationId, IZWayCallback<Notification> callback);
+    void getNotification(Long notificationId, IZWayCallback<Notification> callback);
 
     /**
      * @param notification ZAutomation notification

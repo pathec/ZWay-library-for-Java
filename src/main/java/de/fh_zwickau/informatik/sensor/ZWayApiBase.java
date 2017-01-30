@@ -441,12 +441,12 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public NotificationList getNotifications(Integer since) {
+    public NotificationList getNotifications(Long since) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Notification getNotification(String notificationId) {
+    public Notification getNotification(Long notificationId) {
         throw new UnsupportedOperationException();
     }
 
@@ -607,12 +607,12 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public void getNotifications(IZWayCallback<NotificationList> callback, Integer since) {
+    public void getNotifications(IZWayCallback<NotificationList> callback, Long since) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void getNotification(String notificationId, IZWayCallback<Notification> callback) {
+    public void getNotification(Long notificationId, IZWayCallback<Notification> callback) {
         throw new UnsupportedOperationException();
     }
 
