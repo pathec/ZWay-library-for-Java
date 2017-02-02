@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Camera device type
 - Text device type
+- Icon API, post custom icon and load list of icons 
 
 ## [0.2.2] - 2017-01-30
 ### Changed

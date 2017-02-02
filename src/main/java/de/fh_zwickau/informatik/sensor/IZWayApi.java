@@ -8,6 +8,7 @@
  */
 package de.fh_zwickau.informatik.sensor;
 
+import java.io.File;
 import java.util.Date;
 
 import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistory;
@@ -442,6 +443,12 @@ public interface IZWayApi {
      * @param callback contains the same data like synchronous return value
      */
     void getDeviceHistory(String deviceId, Date since, IZWayCallback<DeviceHistory> callback);
+
+    /**
+     * @param image image file (recommended dimension 64px64px, as png or jpg and smaller than 30kB)
+     * @return message
+     */
+    String postIcon(File image);
 
     /**********************
      ****** ZWaveAPI ******

@@ -10,11 +10,13 @@ package de.fh_zwickau.informatik.sensor;
 
 import static de.fh_zwickau.informatik.sensor.ZWayConstants.*;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -26,6 +28,8 @@ import org.eclipse.jetty.client.api.Request;
 import org.eclipse.jetty.client.api.Request.FailureListener;
 import org.eclipse.jetty.client.api.Result;
 import org.eclipse.jetty.client.util.BufferingResponseListener;
+import org.eclipse.jetty.client.util.MultiPartContentProvider;
+import org.eclipse.jetty.client.util.PathContentProvider;
 import org.eclipse.jetty.client.util.StringContentProvider;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpMethod;
@@ -1436,6 +1440,66 @@ public class ZWayApiHttp extends ZWayApiBase {
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
             return null;
         }
+    }
+
+    @Override
+    public String postIcon(File image) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                MultiPartContentProvider multiPart = new MultiPartContentProvider();
+                multiPart.addFilePart("file", image.getName(), new PathContentProvider(Paths.get(image.getPath())),
+                        null);
+                multiPart.close();
+
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_ICONS + "/upload")
+                        .method(HttpMethod.POST).header(HttpHeader.ACCEPT, "application/json").content(multiPart)
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return postIcon(image);
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return "Icon upload successfully performed";
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return postIcon(image);
+                        }
+                    }
+                } else {
+                    logger.warn("Request postIcon(image) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                stopHttpClient(mHttpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+
+        return null;
     }
 
     /**********************

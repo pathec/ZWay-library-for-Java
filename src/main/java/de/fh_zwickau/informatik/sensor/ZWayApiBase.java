@@ -8,6 +8,7 @@
  */
 package de.fh_zwickau.informatik.sensor;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -489,6 +490,11 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
+    public String postIcon(File image) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public ZWaveDevice getZWaveDevice(int nodeId) {
         throw new UnsupportedOperationException();
     }
@@ -531,7 +537,6 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     @Override
     public void getModules(IZWayCallback<ModuleList> callback) {
         throw new UnsupportedOperationException();
-
     }
 
     @Override
