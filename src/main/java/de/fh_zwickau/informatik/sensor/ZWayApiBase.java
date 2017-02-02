@@ -191,6 +191,19 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
         }
     }
 
+    protected void handleException(Exception e, String request) {
+        if (e.getMessage() != null) {
+            logger.warn("Request {} failed: {}", request, e.getMessage());
+            mCaller.apiError(e.getMessage(), false);
+        } else if (e.getCause() != null && e.getCause().getMessage() != null) {
+            logger.warn("Request {} failed: {}", request, e.getCause().getMessage());
+            mCaller.apiError(e.getCause().getMessage(), false);
+        } else {
+            logger.warn("Request {} failed: unexpected exception", request);
+            mCaller.apiError("Unexpected exception", false);
+        }
+    }
+
     /**************************************
      ****** DeviceCommands Interface ******
      *************************************/

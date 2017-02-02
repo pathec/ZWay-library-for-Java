@@ -269,8 +269,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getCurrentProfile() failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get current profile");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -330,8 +329,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getInstances() failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get instances");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -393,8 +391,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getInstances(callback) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get instances");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -468,8 +465,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getLocations() failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get locations");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -531,8 +527,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getLocations(callback) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get locations");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -606,8 +601,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getDeviceHistories() failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get device history");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -669,8 +663,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getDeviceHistories(callback) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get device history");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -746,8 +739,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getProfiles() failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get profiles");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -809,8 +801,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getProfiles(callback) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get profiles");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -885,8 +876,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getNotifications() failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get notifications");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -949,8 +939,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getNotifications(callback) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get notifications");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -1028,8 +1017,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request putInstance(instance) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "put instance");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -1095,8 +1083,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request putInstance(instance, failed) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "put instance");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -1171,8 +1158,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getDevices() failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get devices");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -1234,8 +1220,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getDevices(callback) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get devices");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -1318,8 +1303,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getDeviceCommand(command) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get device command");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -1390,8 +1374,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getDeviceCommand(command, callback) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get device command");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -1494,8 +1477,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getIcons() failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get icons");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -1557,8 +1539,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getIcons(callback) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get icons");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -1631,8 +1612,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request postIcon(image) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get post icon");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -1699,8 +1679,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getZWaveDevice(nodeId) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get zwave device");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -1766,8 +1745,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getZWaveDevice(nodeId, callback) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get zwave device");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -1839,8 +1817,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getZWaveController() failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get zwave controller");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -1903,8 +1880,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getZWaveController(callback) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get zwave controller");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -1979,8 +1955,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getZWaveInclusion(flag) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get zwave inclusion");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -2041,8 +2016,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getZWaveExclusion(flag) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get zwave exclusion");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -2156,8 +2130,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    logger.warn("Request getZWaveInclusion(flag) failed: {}", e.getMessage());
-                    mCaller.apiError(e.getMessage(), false);
+                    handleException(e, "get zwave device thermostat mode set");
                 }
             } finally {
                 stopHttpClient(mHttpClient);

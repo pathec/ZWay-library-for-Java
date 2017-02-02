@@ -66,57 +66,68 @@ public class DeviceListDeserializer {
     public Device deserializeDevice(JsonElement deviceAsJson, IDeviceCommands commandHandler) {
         Gson gson = new Gson();
 
-        String deviceType = deviceAsJson.getAsJsonObject().get("deviceType").getAsString();
-        Device device = null;
-        switch (deviceType) {
-            case ZWayConstants.DEVICE_TYPE_BATTERY:
-                device = gson.fromJson(deviceAsJson, Battery.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_DOORLOCK:
-                device = gson.fromJson(deviceAsJson, Doorlock.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_THERMOSTAT:
-                device = gson.fromJson(deviceAsJson, Thermostat.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_SWITCH_BINARY:
-                device = gson.fromJson(deviceAsJson, SwitchBinary.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_SWITCH_MULTILEVEL:
-                device = gson.fromJson(deviceAsJson, SwitchMultilevel.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_SENSOR_BINARY:
-                device = gson.fromJson(deviceAsJson, SensorBinary.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_SENSOR_MULTILEVEL:
-                device = gson.fromJson(deviceAsJson, SensorMultilevel.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_SWITCH_TOGGLE:
-                device = gson.fromJson(deviceAsJson, SwitchToggle.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_SWITCH_RGBW:
-                device = gson.fromJson(deviceAsJson, SwitchRGBW.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_SWITCH_CONTROL:
-                device = gson.fromJson(deviceAsJson, SwitchControl.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_TOGGLE_BUTTON:
-                device = gson.fromJson(deviceAsJson, ToggleButton.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_TEXT:
-                device = gson.fromJson(deviceAsJson, Text.class);
-                break;
-            case ZWayConstants.DEVICE_TYPE_CAMERA:
-                device = gson.fromJson(deviceAsJson, Camera.class);
-                break;
-            default:
-                logger.debug("Unknown device type: " + deviceType);
-                break;
-        }
+        if (deviceAsJson.getAsJsonObject().has("deviceType")) {
+            String deviceType = deviceAsJson.getAsJsonObject().get("deviceType").getAsString();
+            Device device = null;
+            try {
+                switch (deviceType) {
+                    case ZWayConstants.DEVICE_TYPE_BATTERY:
+                        device = gson.fromJson(deviceAsJson, Battery.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_DOORLOCK:
+                        device = gson.fromJson(deviceAsJson, Doorlock.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_THERMOSTAT:
+                        device = gson.fromJson(deviceAsJson, Thermostat.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_SWITCH_BINARY:
+                        device = gson.fromJson(deviceAsJson, SwitchBinary.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_SWITCH_MULTILEVEL:
+                        device = gson.fromJson(deviceAsJson, SwitchMultilevel.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_SENSOR_BINARY:
+                        device = gson.fromJson(deviceAsJson, SensorBinary.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_SENSOR_MULTILEVEL:
+                        device = gson.fromJson(deviceAsJson, SensorMultilevel.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_SWITCH_TOGGLE:
+                        device = gson.fromJson(deviceAsJson, SwitchToggle.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_SWITCH_RGBW:
+                        device = gson.fromJson(deviceAsJson, SwitchRGBW.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_SWITCH_CONTROL:
+                        device = gson.fromJson(deviceAsJson, SwitchControl.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_TOGGLE_BUTTON:
+                        device = gson.fromJson(deviceAsJson, ToggleButton.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_TEXT:
+                        device = gson.fromJson(deviceAsJson, Text.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_CAMERA:
+                        device = gson.fromJson(deviceAsJson, Camera.class);
+                        break;
+                    default:
+                        logger.debug("Unknown device type: " + deviceType);
+                        break;
+                }
 
-        if (device != null) {
-            device.setCommandHandler(commandHandler);
-        }
+                if (device != null) {
+                    device.setCommandHandler(commandHandler);
+                }
+            } catch (Exception e) {
+                // Prevent to invalidate whole device list if only one device fails.
+                logger.debug("Deserialize device fails: " + e.getMessage());
+                device = null;
+            }
 
-        return device;
+            return device;
+        } else {
+            logger.debug("Device type not specified!");
+            return null;
+        }
     }
 }
