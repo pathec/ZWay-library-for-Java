@@ -11,6 +11,8 @@ This project provides a Z-Way library for Java. The offical API description is a
 - GET device command
 - GET locations (only with id, title and image property)
 - GET device history
+- GET icons
+- POST icon
 - GET Z-Wave device (device model not complete)
 - other methods throw an `UnsupportedOperationException`
 
@@ -72,6 +74,8 @@ This project provides a Z-Way library for Java. The offical API description is a
 - SwitchToggle
 - Thermostat
 - ToggleButton
+- Text
+- Camera
 
 ## Dependencies
 
