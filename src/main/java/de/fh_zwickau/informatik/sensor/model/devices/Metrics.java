@@ -38,6 +38,25 @@ public class Metrics {
     @SerializedName("max")
     private Integer mMax;
 
+    @SerializedName("url")
+    private String mCameraStreamUrl;
+    @SerializedName("hasZoomIn")
+    private Boolean mCameraHasZoomIn;
+    @SerializedName("hasZoomOut")
+    private Boolean mCameraHasZoomOut;
+    @SerializedName("hasLeft")
+    private Boolean mCameraHasLeft;
+    @SerializedName("hasRight")
+    private Boolean mCameraHasRight;
+    @SerializedName("hasUp")
+    private Boolean mCameraHasUp;
+    @SerializedName("hasDown")
+    private Boolean mCameraHasDown;
+    @SerializedName("hasOpen")
+    private Boolean mCameraHasOpen;
+    @SerializedName("hasClose")
+    private Boolean mCameraHasClose;
+
     /**
      * Instantiate a metrics object with default values.
      */
@@ -47,9 +66,22 @@ public class Metrics {
         mLevel = "";
         mProbeTitle = "";
         mScaleTitle = "";
+
         mColor = new Color();
+
         mMin = 0;
         mMax = 0;
+
+        mCameraStreamUrl = "";
+        mCameraHasZoomIn = false;
+        mCameraHasZoomOut = false;
+        mCameraHasLeft = false;
+        mCameraHasRight = false;
+        mCameraHasUp = false;
+        mCameraHasDown = false;
+        mCameraHasOpen = false;
+        mCameraHasClose = false;
+
     }
 
     public String getIcon() {
@@ -141,6 +173,109 @@ public class Metrics {
     }
 
     /*
+     * Camera
+     */
+
+    public String getCameraStreamUrl() {
+        if (mCameraStreamUrl == null) {
+            mCameraStreamUrl = "";
+        }
+        return mCameraStreamUrl;
+    }
+
+    public void setCameraStreamUrl(String cameraStreamUrl) {
+        this.mCameraStreamUrl = cameraStreamUrl;
+    }
+
+    public Boolean getCameraHasZoomIn() {
+        if (mCameraHasZoomIn == null) {
+            mCameraHasZoomIn = false;
+        }
+        return mCameraHasZoomIn;
+    }
+
+    public void setCameraHasZoomIn(Boolean cameraHasZoomIn) {
+        this.mCameraHasZoomIn = cameraHasZoomIn;
+    }
+
+    public Boolean getCameraHasZoomOut() {
+        if (mCameraHasZoomOut == null) {
+            mCameraHasZoomOut = false;
+        }
+        return mCameraHasZoomOut;
+    }
+
+    public void setCameraHasZoomOut(Boolean cameraHasZoomOut) {
+        this.mCameraHasZoomOut = cameraHasZoomOut;
+    }
+
+    public Boolean getCameraHasLeft() {
+        if (mCameraHasLeft == null) {
+            mCameraHasLeft = false;
+        }
+        return mCameraHasLeft;
+    }
+
+    public void setCameraHasLeft(Boolean cameraHasLeft) {
+        this.mCameraHasLeft = cameraHasLeft;
+    }
+
+    public Boolean getCameraHasRight() {
+        if (mCameraHasRight == null) {
+            mCameraHasRight = false;
+        }
+        return mCameraHasRight;
+    }
+
+    public void setCameraHasRight(Boolean cameraHasRight) {
+        this.mCameraHasRight = cameraHasRight;
+    }
+
+    public Boolean getCameraHasUp() {
+        if (mCameraHasUp == null) {
+            mCameraHasUp = false;
+        }
+        return mCameraHasUp;
+    }
+
+    public void setCameraHasUp(Boolean cameraHasUp) {
+        this.mCameraHasUp = cameraHasUp;
+    }
+
+    public Boolean getCameraHasDown() {
+        if (mCameraHasDown == null) {
+            mCameraHasDown = false;
+        }
+        return mCameraHasDown;
+    }
+
+    public void setCameraHasDown(Boolean cameraHasDown) {
+        this.mCameraHasDown = cameraHasDown;
+    }
+
+    public Boolean getCameraHasOpen() {
+        if (mCameraHasOpen == null) {
+            mCameraHasOpen = false;
+        }
+        return mCameraHasOpen;
+    }
+
+    public void setCameraHasOpen(Boolean cameraHasOpen) {
+        this.mCameraHasOpen = cameraHasOpen;
+    }
+
+    public Boolean getCameraHasClose() {
+        if (mCameraHasClose == null) {
+            mCameraHasClose = false;
+        }
+        return mCameraHasClose;
+    }
+
+    public void setCameraHasClose(Boolean cameraHasClose) {
+        this.mCameraHasClose = cameraHasClose;
+    }
+
+    /*
      * (non-Javadoc)
      *
      * @see java.lang.Object#toString()
@@ -149,6 +284,10 @@ public class Metrics {
     public String toString() {
         return new ToStringBuilder(this).append("icon", mIcon).append("title", mTitle).append("level", mLevel)
                 .append("probeTitle", mProbeTitle).append("scaleTitle", mScaleTitle).append("color", mColor)
-                .append("min", mMin).append("max", mMax).toString();
+                .append("min", mMin).append("max", mMax).append("url", mCameraStreamUrl)
+                .append("hasZoomIn", mCameraHasZoomIn).append("hasZoomOut", mCameraHasZoomOut)
+                .append("hasLeft", mCameraHasLeft).append("hasRight", mCameraHasRight).append("hasUp", mCameraHasUp)
+                .append("hasDown", mCameraHasDown).append("hasOpen", mCameraHasOpen).append("hasClose", mCameraHasClose)
+                .toString();
     }
 }

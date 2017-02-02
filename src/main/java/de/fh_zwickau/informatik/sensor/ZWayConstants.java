@@ -147,6 +147,7 @@ public class ZWayConstants {
     public static final String DEVICE_TYPE_TOGGLE_BUTTON = "toggleButton";
     public static final String DEVICE_TYPE_SWITCH_RGBW = "switchRGBW";
     public static final String DEVICE_TYPE_TEXT = "text";
+    public static final String DEVICE_TYPE_CAMERA = "camera";
 
     public static final String NOTIFICATION_TYPE_DEVICE_INFO = "device-info";
 }

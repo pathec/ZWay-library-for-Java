@@ -17,6 +17,7 @@ import com.google.gson.JsonElement;
 
 import de.fh_zwickau.informatik.sensor.ZWayConstants;
 import de.fh_zwickau.informatik.sensor.model.devices.types.Battery;
+import de.fh_zwickau.informatik.sensor.model.devices.types.Camera;
 import de.fh_zwickau.informatik.sensor.model.devices.types.Doorlock;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SensorBinary;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SensorMultilevel;
@@ -25,6 +26,7 @@ import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchControl;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchMultilevel;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchRGBW;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchToggle;
+import de.fh_zwickau.informatik.sensor.model.devices.types.Text;
 import de.fh_zwickau.informatik.sensor.model.devices.types.Thermostat;
 import de.fh_zwickau.informatik.sensor.model.devices.types.ToggleButton;
 
@@ -101,7 +103,10 @@ public class DeviceListDeserializer {
                 device = gson.fromJson(deviceAsJson, ToggleButton.class);
                 break;
             case ZWayConstants.DEVICE_TYPE_TEXT:
-                // ignore text type: device = gson.fromJson(deviceAsJson, Text.class);
+                device = gson.fromJson(deviceAsJson, Text.class);
+                break;
+            case ZWayConstants.DEVICE_TYPE_CAMERA:
+                device = gson.fromJson(deviceAsJson, Camera.class);
                 break;
             default:
                 logger.debug("Unknown device type: " + deviceType);

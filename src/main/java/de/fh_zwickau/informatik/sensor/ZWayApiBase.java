@@ -136,7 +136,8 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
         return getTopLevelUrl() + ZWAVE_PATH;
     }
 
-    protected String getTopLevelUrl() {
+    public String getTopLevelUrl() {
+        // Method has public visibility for camera stream (http://localhost:8083/DEVICE_ID/stream)
         return mProtocol + "://" + mIpAddress + ":" + mPort;
     }
 
@@ -309,6 +310,28 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     @Override
     public String downstop(Device device) {
         return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "downstop", null));
+    }
+
+    // Camera
+
+    @Override
+    public String zoomIn(Device device) {
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "zoomIn", null));
+    }
+
+    @Override
+    public String zoomOut(Device device) {
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "zoomOut", null));
+    }
+
+    @Override
+    public String left(Device device) {
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "left", null));
+    }
+
+    @Override
+    public String right(Device device) {
+        return getDeviceCommand(new DeviceCommand(device.getDeviceId(), "right", null));
     }
 
     /*********************************

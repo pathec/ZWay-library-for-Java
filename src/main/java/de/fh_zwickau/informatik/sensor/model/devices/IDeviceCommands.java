@@ -58,4 +58,14 @@ public interface IDeviceCommands {
     String downstart(Device device);
 
     String downstop(Device device);
+
+    // Camera (up, down, open, close already defined)
+
+    String zoomIn(Device device);
+
+    String zoomOut(Device device);
+
+    String left(Device device);
+
+    String right(Device device);
 }

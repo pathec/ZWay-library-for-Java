@@ -350,6 +350,24 @@ public abstract class Device {
         throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
     }
 
+    // Camera (up, down, open, close already defined)
+
+    public String zoomIn() {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
+    public String zoomOut() {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
+    public String left() {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
+    public String right() {
+        throw new UnsupportedOperationException("Operation not supported by device type " + mDeviceType);
+    }
+
     /*
      * (non-Javadoc)
      *
