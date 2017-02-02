@@ -48,6 +48,8 @@ import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistoryListDese
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceCommand;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceList;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceListDeserializer;
+import de.fh_zwickau.informatik.sensor.model.icons.IconList;
+import de.fh_zwickau.informatik.sensor.model.icons.IconListDeserializer;
 import de.fh_zwickau.informatik.sensor.model.instances.Instance;
 import de.fh_zwickau.informatik.sensor.model.instances.InstanceList;
 import de.fh_zwickau.informatik.sensor.model.instances.InstanceListDeserializer;
@@ -1435,6 +1437,144 @@ public class ZWayApiHttp extends ZWayApiBase {
             String dataMessage = responseAsJson.get("message").getAsString();
 
             return dataMessage;
+        } catch (JsonParseException e) {
+            logger.warn("Unexpected response format: {}", e.getMessage());
+            mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
+            return null;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getIcons()
+     */
+    @Override
+    public synchronized IconList getIcons() {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_ICONS)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getIcons();
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return parseGetIcons(response.getContentAsString());
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getIcons();
+                        }
+                    }
+                } else {
+                    logger.warn("Request getIcons() failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                stopHttpClient(mHttpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getIcons(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
+    @Override
+    public void getIcons(final IZWayCallback<IconList> callback) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_ICONS)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
+                        .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                request.send(new BufferingResponseListener() {
+                    @Override
+                    public void onComplete(Result result) {
+                        int statusCode = result.getResponse().getStatus();
+                        if (statusCode != HttpStatus.OK_200) {
+                            if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                                if (getLogin() == null) {
+                                    mCaller.authenticationError();
+                                } else {
+                                    getIcons(callback);
+                                }
+                            } else {
+                                processResponseStatus(statusCode);
+                            }
+                        } else {
+                            callback.onSuccess(parseGetIcons(getContentAsString()));
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getIcons(callback);
+                        }
+                    }
+                } else {
+                    logger.warn("Request getIcons(callback) failed: {}", e.getMessage());
+                    mCaller.apiError(e.getMessage(), false);
+                }
+            } finally {
+                // do not stop http client for asynchronous call
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+    }
+
+    private synchronized IconList parseGetIcons(String data) {
+        // Request performed successfully: load response body
+        // Expected response format: { "data": [...] }, ... }
+        try {
+            Gson gson = new Gson();
+            // Response -> String -> Json -> extract data field
+            JsonArray iconsAsJson = gson.fromJson(data, JsonObject.class).get("data").getAsJsonArray();
+
+            return new IconListDeserializer().deserializeIconList(iconsAsJson);
         } catch (JsonParseException e) {
             logger.warn("Unexpected response format: {}", e.getMessage());
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);

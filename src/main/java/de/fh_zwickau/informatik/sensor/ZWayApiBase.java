@@ -22,6 +22,7 @@ import de.fh_zwickau.informatik.sensor.model.devices.Device;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceCommand;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceList;
 import de.fh_zwickau.informatik.sensor.model.devices.IDeviceCommands;
+import de.fh_zwickau.informatik.sensor.model.icons.IconList;
 import de.fh_zwickau.informatik.sensor.model.instances.Instance;
 import de.fh_zwickau.informatik.sensor.model.instances.InstanceList;
 import de.fh_zwickau.informatik.sensor.model.locations.Location;
@@ -490,6 +491,11 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
+    public IconList getIcons() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public String postIcon(File image) {
         throw new UnsupportedOperationException();
     }
@@ -656,6 +662,11 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     @Override
     public void getDeviceHistory(String deviceId, Date since, IZWayCallback<DeviceHistory> callback) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void getIcons(IZWayCallback<IconList> callback) {
         throw new UnsupportedOperationException();
     }
 

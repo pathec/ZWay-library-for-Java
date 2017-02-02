@@ -16,6 +16,7 @@ import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistoryList;
 import de.fh_zwickau.informatik.sensor.model.devices.Device;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceCommand;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceList;
+import de.fh_zwickau.informatik.sensor.model.icons.IconList;
 import de.fh_zwickau.informatik.sensor.model.instances.Instance;
 import de.fh_zwickau.informatik.sensor.model.instances.InstanceList;
 import de.fh_zwickau.informatik.sensor.model.locations.Location;
@@ -443,6 +444,20 @@ public interface IZWayApi {
      * @param callback contains the same data like synchronous return value
      */
     void getDeviceHistory(String deviceId, Date since, IZWayCallback<DeviceHistory> callback);
+
+    // Icons
+
+    /**
+     * @return ZAutomation icon list
+     */
+    IconList getIcons();
+
+    /**
+     * Asynchronous version of {@link #getIcons()}
+     *
+     * @param callback contains the same data like synchronous return value
+     */
+    void getIcons(IZWayCallback<IconList> callback);
 
     /**
      * @param image image file (recommended dimension 64px64px, as png or jpg and smaller than 30kB)
