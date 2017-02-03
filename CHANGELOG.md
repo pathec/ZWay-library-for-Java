@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.4] - 2017-02-03
+### Added
+- Add custom icons property to device model
+
 ## [0.2.3] - 2017-02-02
 ### Added
 - Camera device type

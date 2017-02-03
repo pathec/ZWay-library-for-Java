@@ -56,6 +56,9 @@ public abstract class Device {
     @SerializedName("tags")
     private List<String> mTags;
 
+    @SerializedName("customIcons")
+    private Icons mCustomIcons;
+
     protected IDeviceCommands mCommandHandler;
 
     /**
@@ -76,6 +79,8 @@ public abstract class Device {
 
         mMetrics = new Metrics();
         mTags = new ArrayList<String>();
+
+        mCustomIcons = new Icons();
     }
 
     public Integer getCreationTime() {
@@ -208,6 +213,17 @@ public abstract class Device {
 
     public void setMetrics(Metrics metrics) {
         this.mMetrics = metrics;
+    }
+
+    public Icons getIcons() {
+        if (mCustomIcons == null) {
+            mCustomIcons = new Icons();
+        }
+        return mCustomIcons;
+    }
+
+    public void setIcons(Icons icons) {
+        this.mCustomIcons = icons;
     }
 
     /**
@@ -380,6 +396,6 @@ public abstract class Device {
                 .append("deviceId", mDeviceId).append("location", mLocation)
                 .append("permanentlyHidden", mPermanentlyHidden).append("probeType", mProbeType)
                 .append("visibility", mVisibility).append("updateTime", mUpdateTime).append("metrics", mMetrics)
-                .append("tags", mTags).toString();
+                .append("tags", mTags).append("customIcons", mCustomIcons).toString();
     }
 }
