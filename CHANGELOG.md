@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.5] - 2017-02-04
+### Changed
+- Instance API, id parameter from string to integer
+- Device API, remove post device (not supported and add put device
+
+### Added
+- Add dummy device instance model
+- Add GET (single instance), POST, DELETE for Instance API
+- Add GET (single device), PUT for Device API
+
 ## [0.2.4] - 2017-02-03
 ### Added
 - Add custom icons property to device model

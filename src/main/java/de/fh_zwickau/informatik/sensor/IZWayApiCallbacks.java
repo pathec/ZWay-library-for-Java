@@ -102,7 +102,7 @@ public interface IZWayApiCallbacks {
     /**
      * @param device
      */
-    void postDeviceResponse(Device device);
+    void putDeviceResponse(Device device);
 
     /**
      * @param device

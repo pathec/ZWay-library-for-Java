@@ -30,6 +30,9 @@ public class OpenHABConnectorParams {
     }
 
     public OpenHABConnectorParamsCommonOptions getCommonOptions() {
+        if (mCommonOptions == null) {
+            mCommonOptions = new OpenHABConnectorParamsCommonOptions();
+        }
         return mCommonOptions;
     }
 

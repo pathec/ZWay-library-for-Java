@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package de.fh_zwickau.informatik.sensor.model.instances.openhabconnector;
+package de.fh_zwickau.informatik.sensor.model.instances.dummydevice;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -15,32 +15,35 @@ import com.google.gson.annotations.SerializedName;
 import de.fh_zwickau.informatik.sensor.model.instances.Instance;
 
 /**
- * The {@link OpenHABConnector} represents the instance representation of openHAB connector. See also:
+ * The {@link DummyDevice} represents the instance representation of openHAB connector. See also:
  * http://docs.zwayhomeautomation.apiary.io/#
  *
  * @author Patrick Hecker - Initial contribution
  */
-public class OpenHABConnector extends Instance {
+public class DummyDevice extends Instance {
     @SerializedName("params")
-    private OpenHABConnectorParams mParams;
+    private DummyDeviceParams mParams;
 
     /**
      * Instantiate a openHAB connector with default values.
      */
-    public OpenHABConnector() {
+    public DummyDevice() {
         super();
 
-        mParams = new OpenHABConnectorParams();
+        setInstanceId("0");
+        setModuleId("DummyDevice");
+        setActive(true);
+        mParams = new DummyDeviceParams();
     }
 
-    public OpenHABConnectorParams getParams() {
+    public DummyDeviceParams getParams() {
         if (mParams == null) {
-            mParams = new OpenHABConnectorParams();
+            mParams = new DummyDeviceParams();
         }
         return mParams;
     }
 
-    public void setParams(OpenHABConnectorParams params) {
+    public void setParams(DummyDeviceParams params) {
         this.mParams = params;
     }
 

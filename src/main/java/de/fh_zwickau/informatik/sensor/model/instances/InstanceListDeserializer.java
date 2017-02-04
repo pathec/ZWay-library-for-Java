@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
+import de.fh_zwickau.informatik.sensor.model.instances.dummydevice.DummyDevice;
 import de.fh_zwickau.informatik.sensor.model.instances.openhabconnector.OpenHABConnector;
 
 /**
@@ -57,6 +58,9 @@ public class InstanceListDeserializer {
         switch (moduleId) {
             case "OpenHABConnector":
                 instance = gson.fromJson(instanceAsJson, OpenHABConnector.class);
+                break;
+            case "DummyDevice":
+                instance = gson.fromJson(instanceAsJson, DummyDevice.class);
                 break;
             default:
                 logger.debug("Unknown module id: " + moduleId);

@@ -33,6 +33,9 @@ public class OpenHABConnectorParamsCommonOptions {
     }
 
     public List<OpenHabConnectorZWayServer> getOpenHabServers() {
+        if (mOpenHabServers == null) {
+            mOpenHabServers = new ArrayList<OpenHabConnectorZWayServer>();
+        }
         return mOpenHabServers;
     }
 

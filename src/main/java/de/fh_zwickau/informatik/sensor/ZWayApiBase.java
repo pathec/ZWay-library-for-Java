@@ -394,7 +394,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public Instance getInstance(String instanceId) {
+    public Instance getInstance(Integer instanceId) {
         throw new UnsupportedOperationException();
     }
 
@@ -404,7 +404,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public Boolean deleteInstance(String instanceId) {
+    public Boolean deleteInstance(Integer instanceId) {
         throw new UnsupportedOperationException();
     }
 
@@ -414,7 +414,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public Device postDevice(Device device) {
+    public Device putDevice(Device device) {
         throw new UnsupportedOperationException();
     }
 
@@ -569,7 +569,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public void getInstance(String instanceId, IZWayCallback<Instance> callback) {
+    public void getInstance(Integer instanceId, IZWayCallback<Instance> callback) {
         throw new UnsupportedOperationException();
     }
 
@@ -579,7 +579,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public void deleteInstance(String instanceId, IZWayCallback<Boolean> callback) {
+    public void deleteInstance(Integer instanceId, IZWayCallback<Boolean> callback) {
         throw new UnsupportedOperationException();
     }
 
@@ -589,7 +589,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public void postDevice(Device device, IZWayCallback<Device> callback) {
+    public void putDevice(Device device, IZWayCallback<Device> callback) {
         throw new UnsupportedOperationException();
     }
 

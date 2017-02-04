@@ -8,6 +8,8 @@
  */
 package de.fh_zwickau.informatik.sensor.model.instances;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.gson.annotations.SerializedName;
@@ -30,9 +32,7 @@ public abstract class Instance {
     @SerializedName("id")
     private Integer mId;
     @SerializedName("creationTime")
-    private Integer mCreationTime;
-    @SerializedName("module")
-    private String mModule;
+    private Long mCreationTime;
 
     /**
      * Instantiate a instance with default values.
@@ -43,8 +43,7 @@ public abstract class Instance {
         mActive = true;
         mTitle = "";
         mId = -1;
-        mCreationTime = -1;
-        mModule = "";
+        mCreationTime = new Date().getTime() / 1000;
     }
 
     public String getInstanceId() {
@@ -102,26 +101,15 @@ public abstract class Instance {
         this.mId = id;
     }
 
-    public Integer getCreationTime() {
+    public Long getCreationTime() {
         if (mCreationTime == null) {
-            mCreationTime = -1;
+            mCreationTime = -1l;
         }
         return mCreationTime;
     }
 
-    public void setCreationTime(Integer creationTime) {
+    public void setCreationTime(Long creationTime) {
         this.mCreationTime = creationTime;
-    }
-
-    public String getModule() {
-        if (mModule == null) {
-            mModule = "";
-        }
-        return mModule;
-    }
-
-    public void setModule(String module) {
-        this.mModule = module;
     }
 
     /*
@@ -133,6 +121,6 @@ public abstract class Instance {
     public String toString() {
         return new ToStringBuilder(this).append("instanceId", mInstanceId).append("moduleId", mModuleId)
                 .append("active", mActive).append("title", mTitle).append("id", mId)
-                .append("creationTime", mCreationTime).append("module", mModule).toString();
+                .append("creationTime", mCreationTime).toString();
     }
 }

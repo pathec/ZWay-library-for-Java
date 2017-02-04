@@ -137,7 +137,7 @@ public interface IZWayApi {
      * @param instanceId ZAutomation instance id
      * @return ZAutomation instance
      */
-    Instance getInstance(String instanceId);
+    Instance getInstance(Integer instanceId);
 
     /**
      * Asynchronous version of {@link #getInstance(String)}
@@ -145,7 +145,7 @@ public interface IZWayApi {
      * @param instanceId ZAutomation instance id
      * @param callback contains the same data like synchronous return value
      */
-    void getInstance(String instanceId, IZWayCallback<Instance> callback);
+    void getInstance(Integer instanceId, IZWayCallback<Instance> callback);
 
     /**
      * @param instance ZAutomation instance
@@ -165,7 +165,7 @@ public interface IZWayApi {
      * @param instanceId ZAutomation instance id
      * @return true if ZAutomation instance deleted
      */
-    Boolean deleteInstance(String instanceId);
+    Boolean deleteInstance(Integer instanceId);
 
     /**
      * Asynchronous version of {@link #deleteInstance(String)}
@@ -173,7 +173,7 @@ public interface IZWayApi {
      * @param instanceId ZAutomation instance id
      * @param callback contains the same data like synchronous return value
      */
-    void deleteInstance(String instanceId, IZWayCallback<Boolean> callback);
+    void deleteInstance(Integer instanceId, IZWayCallback<Boolean> callback);
 
     // Devices
 
@@ -190,10 +190,10 @@ public interface IZWayApi {
     void getDevices(IZWayCallback<DeviceList> callback);
 
     /**
-     * @param device ZAutomation device id
+     * @param device ZAutomation device
      * @return new ZAutomation device
      */
-    Device postDevice(Device device);
+    Device putDevice(Device device);
 
     /**
      * Asynchronous version of {@link #postDevice(Device)}
@@ -201,7 +201,7 @@ public interface IZWayApi {
      * @param device ZAutomation device
      * @param callback contains the same data like synchronous return value
      */
-    void postDevice(Device device, IZWayCallback<Device> callback);
+    void putDevice(Device device, IZWayCallback<Device> callback);
 
     /**
      * @param deviceId ZAutomation device id

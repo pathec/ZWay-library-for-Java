@@ -21,7 +21,7 @@ public class ZWayConstants {
     public static final String PATH_MODULES = "modules";
     public static final String PATH_INSTANCES = "instances";
     public static final String PATH_DEVICES = "devices";
-    public static final String PATH_DEVICES_COMMAND = "devices/{vDevName}/command/{command}";
+    public static final String PATH_DEVICES_COMMAND = "devices/{deviceId}/command/{command}";
     public static final String PATH_LOCATIONS = "locations";
     public static final String PATH_PROFILES = "profiles";
     public static final String PATH_NOTIFICATIONS = "notifications";

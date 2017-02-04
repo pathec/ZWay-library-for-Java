@@ -59,6 +59,9 @@ public class OpenHabConnectorZWayServer {
     }
 
     public String getOpenHabAlias() {
+        if (mOpenHabAlias == null) {
+            mOpenHabAlias = "";
+        }
         return mOpenHabAlias;
     }
 
@@ -71,6 +74,9 @@ public class OpenHabConnectorZWayServer {
     }
 
     public String getIpAddress() {
+        if (mIpAddress == null) {
+            mIpAddress = "";
+        }
         return mIpAddress;
     }
 
@@ -83,6 +89,9 @@ public class OpenHabConnectorZWayServer {
     }
 
     public Integer getPort() {
+        if (mPort == null) {
+            mPort = -1;
+        }
         return mPort;
     }
 

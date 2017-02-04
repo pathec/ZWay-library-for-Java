@@ -26,7 +26,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Patrick Hecker - Initial contribution
  */
 public abstract class Device {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private transient Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @SerializedName("creationTime")
     private Integer mCreationTime;
@@ -59,7 +59,8 @@ public abstract class Device {
     @SerializedName("customIcons")
     private Icons mCustomIcons;
 
-    protected IDeviceCommands mCommandHandler;
+    // Transient exclude field from serialization!
+    protected transient IDeviceCommands mCommandHandler;
 
     /**
      * Instantiate a device with default values.

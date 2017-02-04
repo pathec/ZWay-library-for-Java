@@ -5,9 +5,13 @@ This project provides a Z-Way library for Java. The offical API description is a
 - GET login
 - GET instances
 - PUT instance
+- POST instance
+- DELETE instance
 - GET notifications
 - GET profiles
 - GET devices
+- GET device
+- PUT device
 - GET device command
 - GET locations (only with id, title and image property)
 - GET device history
