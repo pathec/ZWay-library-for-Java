@@ -89,8 +89,10 @@ public class DeviceCommand {
     @Override
     public String toString() {
         ToStringBuilder toStringBuilder = new ToStringBuilder(this);
-        for (Entry<String, String> entry : mParams.entrySet()) {
-            toStringBuilder.append(entry.getKey(), entry.getValue());
+        if (mParams != null) {
+            for (Entry<String, String> entry : mParams.entrySet()) {
+                toStringBuilder.append(entry.getKey(), entry.getValue());
+            }
         }
 
         return new ToStringBuilder(this).append("deviceId", mDeviceId).append("command", mCommand)

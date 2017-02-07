@@ -138,6 +138,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
         return getTopLevelUrl() + ZWAVE_PATH;
     }
 
+    @Override
     public String getTopLevelUrl() {
         // Method has public visibility for camera stream (http://localhost:8083/DEVICE_ID/stream)
         return mProtocol + "://" + mIpAddress + ":" + mPort;

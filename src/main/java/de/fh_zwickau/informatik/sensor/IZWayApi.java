@@ -521,5 +521,7 @@ public interface IZWayApi {
 
     String getZWayRemoteSessionId();
 
+    String getTopLevelUrl();
+
     void cancelCurrentRequest();
 }
