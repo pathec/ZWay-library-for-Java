@@ -57,6 +57,9 @@ public class Metrics {
     @SerializedName("hasClose")
     private Boolean mCameraHasClose;
 
+    @SerializedName("text")
+    private String mText;
+
     /**
      * Instantiate a metrics object with default values.
      */
@@ -82,6 +85,7 @@ public class Metrics {
         mCameraHasOpen = false;
         mCameraHasClose = false;
 
+        mText = "";
     }
 
     public String getIcon() {
@@ -275,6 +279,17 @@ public class Metrics {
         this.mCameraHasClose = cameraHasClose;
     }
 
+    public String getText() {
+        if (mText == null) {
+            mText = "";
+        }
+        return mText;
+    }
+
+    public void setText(String text) {
+        this.mText = text;
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -288,6 +303,6 @@ public class Metrics {
                 .append("hasZoomIn", mCameraHasZoomIn).append("hasZoomOut", mCameraHasZoomOut)
                 .append("hasLeft", mCameraHasLeft).append("hasRight", mCameraHasRight).append("hasUp", mCameraHasUp)
                 .append("hasDown", mCameraHasDown).append("hasOpen", mCameraHasOpen).append("hasClose", mCameraHasClose)
-                .toString();
+                .append("text", mText).toString();
     }
 }
