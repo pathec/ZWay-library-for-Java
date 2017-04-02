@@ -9,9 +9,10 @@
 package de.fh_zwickau.informatik.sensor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 
-import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistory;
+import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistoryData;
 import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistoryList;
 import de.fh_zwickau.informatik.sensor.model.devices.Device;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceCommand;
@@ -434,7 +435,7 @@ public interface IZWayApi {
      * @param since lower limit
      * @return ZAutomation device history
      */
-    DeviceHistory getDeviceHistory(String deviceId, Date since);
+    ArrayList<DeviceHistoryData> getDeviceHistory(String deviceId, Long since);
 
     /**
      * Asynchronous version of {@link #getDeviceHistory(String, Date)}
@@ -443,7 +444,7 @@ public interface IZWayApi {
      * @param since lower limit
      * @param callback contains the same data like synchronous return value
      */
-    void getDeviceHistory(String deviceId, Date since, IZWayCallback<DeviceHistory> callback);
+    void getDeviceHistory(String deviceId, Long since, IZWayCallback<ArrayList<DeviceHistoryData>> callback);
 
     // Icons
 

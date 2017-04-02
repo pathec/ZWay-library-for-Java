@@ -9,14 +9,14 @@
 package de.fh_zwickau.informatik.sensor;
 
 import java.io.File;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistory;
+import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistoryData;
 import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistoryList;
 import de.fh_zwickau.informatik.sensor.model.devices.Device;
 import de.fh_zwickau.informatik.sensor.model.devices.DeviceCommand;
@@ -500,7 +500,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public DeviceHistory getDeviceHistory(String deviceId, Date since) {
+    public ArrayList<DeviceHistoryData> getDeviceHistory(String deviceId, Long since) {
         throw new UnsupportedOperationException();
     }
 
@@ -675,7 +675,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
     }
 
     @Override
-    public void getDeviceHistory(String deviceId, Date since, IZWayCallback<DeviceHistory> callback) {
+    public void getDeviceHistory(String deviceId, Long since, IZWayCallback<ArrayList<DeviceHistoryData>> callback) {
         throw new UnsupportedOperationException();
     }
 

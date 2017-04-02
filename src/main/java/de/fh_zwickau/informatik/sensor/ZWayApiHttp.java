@@ -12,11 +12,14 @@ import static de.fh_zwickau.informatik.sensor.ZWayConstants.*;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.net.CookieStore;
 import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -42,7 +45,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 
+import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistoryData;
 import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistoryList;
 import de.fh_zwickau.informatik.sensor.model.devicehistory.DeviceHistoryListDeserializer;
 import de.fh_zwickau.informatik.sensor.model.devices.Device;
@@ -554,8 +559,8 @@ public class ZWayApiHttp extends ZWayApiBase {
 
     /*
      * (non-Javadoc)
-     *
-     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getDeviceHistory()
+     * 
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getDeviceHistories()
      */
     @Override
     public synchronized DeviceHistoryList getDeviceHistories() {
@@ -602,7 +607,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    handleException(e, "get device history");
+                    handleException(e, "get device histories");
                 }
             } finally {
                 stopHttpClient(mHttpClient);
@@ -615,7 +620,8 @@ public class ZWayApiHttp extends ZWayApiBase {
     /*
      * (non-Javadoc)
      *
-     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getLocations(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     * @see
+     * de.fh_zwickau.informatik.sensor.ZWayApiBase#getDeviceHistories(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
     public void getDeviceHistories(final IZWayCallback<DeviceHistoryList> callback) {
@@ -664,7 +670,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         }
                     }
                 } else {
-                    handleException(e, "get device history");
+                    handleException(e, "get device histories");
                 }
             } finally {
                 // do not stop http client for asynchronous call
@@ -683,6 +689,153 @@ public class ZWayApiHttp extends ZWayApiBase {
             JsonArray historiesAsJson = responseDataAsJson.get("history").getAsJsonArray();
 
             return new DeviceHistoryListDeserializer().deserializeDeviceHistoryList(historiesAsJson);
+        } catch (JsonParseException e) {
+            logger.warn("Unexpected response format: {}", e.getMessage());
+            mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
+            return null;
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getDeviceHistory(java.lang.String, java.lang.Long)
+     */
+    @Override
+    public synchronized ArrayList<DeviceHistoryData> getDeviceHistory(String deviceId, Long since) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient
+                        .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICE_HISTORY + "/" + deviceId + "?since="
+                                + String.valueOf(since))
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getDeviceHistory(deviceId, since);
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return parseGetDeviceHistory(response.getContentAsString());
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getDeviceHistory(deviceId, since);
+                        }
+                    }
+                } else {
+                    handleException(e, "get device history");
+                }
+            } finally {
+                stopHttpClient(mHttpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getDeviceHistory(java.lang.String, java.lang.Long,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
+    @Override
+    public void getDeviceHistory(final String deviceId, final Long since,
+            final IZWayCallback<ArrayList<DeviceHistoryData>> callback) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient
+                        .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICE_HISTORY + "/" + deviceId + "?since="
+                                + String.valueOf(since))
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
+                        .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                request.send(new BufferingResponseListener() {
+                    @Override
+                    public void onComplete(Result result) {
+                        int statusCode = result.getResponse().getStatus();
+                        if (statusCode != HttpStatus.OK_200) {
+                            if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                                if (getLogin() == null) {
+                                    mCaller.authenticationError();
+                                } else {
+                                    getDeviceHistory(deviceId, since, callback);
+                                }
+                            } else {
+                                processResponseStatus(statusCode);
+                            }
+                        } else {
+                            callback.onSuccess(parseGetDeviceHistory(getContentAsString()));
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getDeviceHistory(deviceId, since, callback);
+                        }
+                    }
+                } else {
+                    handleException(e, "get device history");
+                }
+            } finally {
+                // do not stop http client for asynchronous call
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+    }
+
+    private synchronized ArrayList<DeviceHistoryData> parseGetDeviceHistory(String data) {
+        // Request performed successfully: load response body
+        // Expected response format: { "data": {...} }, ... }
+        try {
+            Type collectionTypeHistoryData = new TypeToken<Collection<DeviceHistoryData>>() {
+            }.getType();
+
+            Gson gson = new Gson();
+            // Response -> String -> Json -> extract data field
+            JsonObject responseDataAsJson = gson.fromJson(data, JsonObject.class).get("data").getAsJsonObject();
+            // extract history array field
+            JsonArray historyAsJson = responseDataAsJson.get("deviceHistory").getAsJsonArray();
+            return gson.fromJson(historyAsJson, collectionTypeHistoryData);
+
         } catch (JsonParseException e) {
             logger.warn("Unexpected response format: {}", e.getMessage());
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);

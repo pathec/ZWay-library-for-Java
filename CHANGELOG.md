@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.6] - 2017-04-02
+### Added
+- Device history API for single device
+
 ## [0.2.5] - 2017-02-04
 ### Changed
 - Instance API, id parameter from string to integer
