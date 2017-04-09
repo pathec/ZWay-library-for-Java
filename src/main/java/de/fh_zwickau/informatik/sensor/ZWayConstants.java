@@ -60,6 +60,7 @@ public class ZWayConstants {
     public static final String ICON_BAROMETER = "barometer";
     public static final String ICON_ULTRAVIOLET = "ultraviolet";
     public static final String ICON_ALARM = "alarm";
+    public static final String ICON_GESTURE = "gesture";
 
     public static final String PROBE_TYPE_TEMPERATURE = "temperature";
     public static final String PROBE_TYPE_LUMINOSITY = "luminosity";
@@ -135,6 +136,7 @@ public class ZWayConstants {
     public static final String PROBE_TITLE_POWER = "Power";
     public static final String PROBE_TITLE_ELECTRIC = "Electric"; // attention! scaleTitles: W, kWh
     public static final String PROBE_TITLE_CO2_LEVEL = "CO2 Level";
+    public static final String PROBE_TITLE_CONTROL = "Control";
 
     public static final String DEVICE_TYPE_BATTERY = "battery";
     public static final String DEVICE_TYPE_DOORLOCK = "doorlock";
@@ -149,6 +151,8 @@ public class ZWayConstants {
     public static final String DEVICE_TYPE_SWITCH_RGBW = "switchRGBW";
     public static final String DEVICE_TYPE_TEXT = "text";
     public static final String DEVICE_TYPE_CAMERA = "camera";
+    public static final String DEVICE_TYPE_SENSOR_MULTILINE = "sensorMultiline";
+    public static final String DEVICE_TYPE_SENSOR_DISCRETE = "sensorDiscrete";
 
     public static final String NOTIFICATION_TYPE_DEVICE_INFO = "device-info";
 }

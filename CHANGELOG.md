@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.7] - 2017-04-09
+### Added
+- Sensor discrete device type
+- Sensor multilevel device type
+- Z-Way API function (getDeviceAsJson) to load a device as JSON, for special devices
+
 ## [0.2.6] - 2017-04-02
 ### Added
 - Device history API for single device

@@ -60,6 +60,19 @@ public class Metrics {
     @SerializedName("text")
     private String mText;
 
+    @SerializedName("currentScene")
+    private Integer mDiscreteCurrentScene;
+    @SerializedName("keyAttribute")
+    private Integer mDiscreteKeyAttribute;
+    @SerializedName("state")
+    private String mDiscreteState;
+    @SerializedName("maxScenes")
+    private Integer mDiscreteMaxScenes;
+    @SerializedName("cnt")
+    private Integer mDiscreteCount;
+    @SerializedName("type")
+    private String mDiscreteType;
+
     /**
      * Instantiate a metrics object with default values.
      */
@@ -86,6 +99,13 @@ public class Metrics {
         mCameraHasClose = false;
 
         mText = "";
+
+        mDiscreteCurrentScene = 0;
+        mDiscreteKeyAttribute = 0;
+        mDiscreteState = "";
+        mDiscreteMaxScenes = 0;
+        mDiscreteCount = 0;
+        mDiscreteType = "";
     }
 
     public String getIcon() {
@@ -290,6 +310,72 @@ public class Metrics {
         this.mText = text;
     }
 
+    public Integer getDiscreteCurrentScene() {
+        if (mDiscreteCurrentScene == null) {
+            mDiscreteCurrentScene = 0;
+        }
+        return mDiscreteCurrentScene;
+    }
+
+    public void setDiscreteCurrentScene(Integer discreteCurrentScene) {
+        this.mDiscreteCurrentScene = discreteCurrentScene;
+    }
+
+    public Integer getDiscreteKeyAttribute() {
+        if (mDiscreteKeyAttribute == null) {
+            mDiscreteKeyAttribute = 0;
+        }
+        return mDiscreteKeyAttribute;
+    }
+
+    public void setDiscreteKeyAttribute(Integer discreteKeyAttribute) {
+        this.mDiscreteKeyAttribute = discreteKeyAttribute;
+    }
+
+    public String getDiscreteState() {
+        if (mDiscreteState == null) {
+            mDiscreteState = "";
+        }
+        return mDiscreteState;
+    }
+
+    public void setDiscreteState(String discreteState) {
+        this.mDiscreteState = discreteState;
+    }
+
+    public Integer getDiscreteMaxScenes() {
+        if (mDiscreteMaxScenes == null) {
+            mDiscreteMaxScenes = 0;
+        }
+        return mDiscreteMaxScenes;
+    }
+
+    public void setDiscreteMaxScenes(Integer discreteMaxScenes) {
+        this.mDiscreteMaxScenes = discreteMaxScenes;
+    }
+
+    public Integer getDiscreteCount() {
+        if (mDiscreteCount == null) {
+            mDiscreteCount = 0;
+        }
+        return mDiscreteCount;
+    }
+
+    public void setDiscreteCount(Integer discreteCount) {
+        this.mDiscreteCount = discreteCount;
+    }
+
+    public String getDiscreteType() {
+        if (mDiscreteType == null) {
+            mDiscreteType = "";
+        }
+        return mDiscreteType;
+    }
+
+    public void setDiscreteType(String discreteType) {
+        this.mDiscreteType = discreteType;
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -303,6 +389,9 @@ public class Metrics {
                 .append("hasZoomIn", mCameraHasZoomIn).append("hasZoomOut", mCameraHasZoomOut)
                 .append("hasLeft", mCameraHasLeft).append("hasRight", mCameraHasRight).append("hasUp", mCameraHasUp)
                 .append("hasDown", mCameraHasDown).append("hasOpen", mCameraHasOpen).append("hasClose", mCameraHasClose)
-                .append("text", mText).toString();
+                .append("text", mText).append("currentScene", mDiscreteCurrentScene)
+                .append("keyAttribute", mDiscreteKeyAttribute).append("state", mDiscreteState)
+                .append("maxScenes", mDiscreteMaxScenes).append("cnt", mDiscreteCount).append("type", mDiscreteType)
+                .toString();
     }
 }

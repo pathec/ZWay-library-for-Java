@@ -11,6 +11,7 @@ This project provides a Z-Way library for Java. The offical API description is a
 - GET profiles
 - GET devices
 - GET device
+- GET device as JSON
 - PUT device
 - GET device command
 - GET locations (only with id, title and image property)
@@ -80,6 +81,8 @@ This project provides a Z-Way library for Java. The offical API description is a
 - ToggleButton
 - Text
 - Camera
+- SensorDiscrete
+- SensorMultiline
 
 ## Dependencies
 

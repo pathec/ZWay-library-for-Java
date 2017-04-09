@@ -20,7 +20,9 @@ import de.fh_zwickau.informatik.sensor.model.devices.types.Battery;
 import de.fh_zwickau.informatik.sensor.model.devices.types.Camera;
 import de.fh_zwickau.informatik.sensor.model.devices.types.Doorlock;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SensorBinary;
+import de.fh_zwickau.informatik.sensor.model.devices.types.SensorDiscrete;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SensorMultilevel;
+import de.fh_zwickau.informatik.sensor.model.devices.types.SensorMultiline;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchBinary;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchControl;
 import de.fh_zwickau.informatik.sensor.model.devices.types.SwitchMultilevel;
@@ -109,6 +111,12 @@ public class DeviceListDeserializer {
                         break;
                     case ZWayConstants.DEVICE_TYPE_CAMERA:
                         device = gson.fromJson(deviceAsJson, Camera.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_SENSOR_DISCRETE:
+                        device = gson.fromJson(deviceAsJson, SensorDiscrete.class);
+                        break;
+                    case ZWayConstants.DEVICE_TYPE_SENSOR_MULTILINE:
+                        device = gson.fromJson(deviceAsJson, SensorMultiline.class);
                         break;
                     default:
                         logger.debug("Unknown device type: " + deviceType);

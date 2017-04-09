@@ -219,6 +219,24 @@ public interface IZWayApi {
     void getDevice(String deviceId, IZWayCallback<Device> callback);
 
     /**
+     * Use this method to get the complete JSON string of a device.
+     * This is useful for special devices, such as the weather app.
+     * In this case, the client must parse and interpret the data structure.
+     *
+     * @param deviceId ZAutomation device id
+     * @return JSON string
+     */
+    String getDeviceAsJson(String deviceId);
+
+    /**
+     * Asynchronous version of {@link #getDeviceAsJson(String)}
+     *
+     * @param deviceId ZAutomation device id
+     * @param callback contains the same data like synchronous return value
+     */
+    void getDeviceAsJson(String deviceId, IZWayCallback<String> callback);
+
+    /**
      * @param command ZAutomation command
      * @return response message
      */

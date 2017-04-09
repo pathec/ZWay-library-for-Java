@@ -354,361 +354,773 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
      ****** Z-Way API Interface ******
      ********************************/
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getStatus()
+     */
     @Override
     public String getStatus() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getRestart()
+     */
     @Override
     public Boolean getRestart() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getLogin()
+     */
     @Override
     public String getLogin() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getCurrentProfile()
+     */
     @Override
     public Profile getCurrentProfile() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNamespaces()
+     */
     @Override
     public NamespaceList getNamespaces() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getModules()
+     */
     @Override
     public ModuleList getModules() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getInstances()
+     */
     @Override
     public InstanceList getInstances() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.fh_zwickau.informatik.sensor.IZWayApi#postInstance(de.fh_zwickau.informatik.sensor.model.instances.Instance)
+     */
     @Override
     public Instance postInstance(Instance instance) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getInstance(java.lang.Integer)
+     */
     @Override
     public Instance getInstance(Integer instanceId) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.fh_zwickau.informatik.sensor.IZWayApi#putInstance(de.fh_zwickau.informatik.sensor.model.instances.Instance)
+     */
     @Override
     public Instance putInstance(Instance instance) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteInstance(java.lang.Integer)
+     */
     @Override
     public Boolean deleteInstance(Integer instanceId) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDevices()
+     */
     @Override
     public DeviceList getDevices() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#putDevice(de.fh_zwickau.informatik.sensor.model.devices.Device)
+     */
     @Override
     public Device putDevice(Device device) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDevice(java.lang.String)
+     */
     @Override
     public Device getDevice(String deviceId) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceAsJson(java.lang.String)
+     */
+    @Override
+    public String getDeviceAsJson(String deviceId) {
+        throw new UnsupportedOperationException();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceCommand(de.fh_zwickau.informatik.sensor.model.devices.
+     * DeviceCommand)
+     */
     @Override
     public String getDeviceCommand(DeviceCommand command) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getLocations()
+     */
     @Override
     public LocationList getLocations() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.fh_zwickau.informatik.sensor.IZWayApi#postLocation(de.fh_zwickau.informatik.sensor.model.locations.Location)
+     */
     @Override
     public Location postLocation(Location location) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getLocation(java.lang.String)
+     */
     @Override
     public Location getLocation(String locationId) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.fh_zwickau.informatik.sensor.IZWayApi#putLocation(de.fh_zwickau.informatik.sensor.model.locations.Location)
+     */
     @Override
     public Location putLocation(Location location) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteLocation(java.lang.String)
+     */
     @Override
     public Boolean deleteLocation(String locationId) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getProfiles()
+     */
     @Override
     public ProfileList getProfiles() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#postProfile(de.fh_zwickau.informatik.sensor.model.profiles.Profile)
+     */
     @Override
     public Profile postProfile(Profile profile) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getProfile(java.lang.String)
+     */
     @Override
     public Profile getProfile(String profileId) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#putProfile(de.fh_zwickau.informatik.sensor.model.profiles.Profile)
+     */
     @Override
     public Profile putProfile(Profile profile) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteProfile(java.lang.String)
+     */
     @Override
     public Boolean deleteProfile(String profileId) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNotifications(java.lang.Long)
+     */
     @Override
     public NotificationList getNotifications(Long since) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNotification(java.lang.Long)
+     */
     @Override
     public Notification getNotification(Long notificationId) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.fh_zwickau.informatik.sensor.IZWayApi#putNotification(de.fh_zwickau.informatik.sensor.model.notifications.
+     * Notification)
+     */
     @Override
     public Notification putNotification(Notification notification) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceHistories()
+     */
     @Override
     public DeviceHistoryList getDeviceHistories() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceHistory(java.lang.String, java.lang.Long)
+     */
     @Override
     public ArrayList<DeviceHistoryData> getDeviceHistory(String deviceId, Long since) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getIcons()
+     */
     @Override
     public IconList getIcons() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#postIcon(java.io.File)
+     */
     @Override
     public String postIcon(File image) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveDevice(int)
+     */
     @Override
     public ZWaveDevice getZWaveDevice(int nodeId) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveController()
+     */
     @Override
     public ZWaveController getZWaveController() {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveInclusion(int)
+     */
     @Override
     public void getZWaveInclusion(int flag) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveExclusion(int)
+     */
     @Override
     public void getZWaveExclusion(int flag) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#updateControllerData(java.lang.String, java.lang.String)
+     */
     @Override
     public void updateControllerData(String field, String value) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getStatus(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getStatus(IZWayCallback<String> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getRestart(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getRestart(IZWayCallback<Boolean> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNamespaces(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getNamespaces(IZWayCallback<NamespaceList> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getModules(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getModules(IZWayCallback<ModuleList> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getInstances(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getInstances(IZWayCallback<InstanceList> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.fh_zwickau.informatik.sensor.IZWayApi#postInstance(de.fh_zwickau.informatik.sensor.model.instances.Instance,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void postInstance(Instance instance, IZWayCallback<Instance> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getInstance(java.lang.Integer,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getInstance(Integer instanceId, IZWayCallback<Instance> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.fh_zwickau.informatik.sensor.IZWayApi#putInstance(de.fh_zwickau.informatik.sensor.model.instances.Instance,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void putInstance(Instance instance, IZWayCallback<Instance> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteInstance(java.lang.Integer,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void deleteInstance(Integer instanceId, IZWayCallback<Boolean> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDevices(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getDevices(IZWayCallback<DeviceList> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#putDevice(de.fh_zwickau.informatik.sensor.model.devices.Device,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void putDevice(Device device, IZWayCallback<Device> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDevice(java.lang.String,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getDevice(String deviceId, IZWayCallback<Device> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceAsJson(java.lang.String,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
+    @Override
+    public void getDeviceAsJson(String deviceId, IZWayCallback<String> callback) {
+        throw new UnsupportedOperationException();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceCommand(de.fh_zwickau.informatik.sensor.model.devices.
+     * DeviceCommand, de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getDeviceCommand(DeviceCommand command, IZWayCallback<String> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getLocations(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getLocations(IZWayCallback<LocationList> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.fh_zwickau.informatik.sensor.IZWayApi#postLocation(de.fh_zwickau.informatik.sensor.model.locations.Location,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void postLocation(Location location, IZWayCallback<Location> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getLocation(java.lang.String,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getLocation(String locationId, IZWayCallback<Location> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.fh_zwickau.informatik.sensor.IZWayApi#putLocation(de.fh_zwickau.informatik.sensor.model.locations.Location,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void putLocation(Location location, IZWayCallback<Location> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteLocation(java.lang.String,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void deleteLocation(String locationId, IZWayCallback<Boolean> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getProfiles(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getProfiles(IZWayCallback<ProfileList> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#postProfile(de.fh_zwickau.informatik.sensor.model.profiles.Profile,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void postProfile(Profile profile, IZWayCallback<Profile> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getProfile(java.lang.String,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getProfile(String profileId, IZWayCallback<Profile> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#putProfile(de.fh_zwickau.informatik.sensor.model.profiles.Profile,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void putProfile(Profile profile, IZWayCallback<Profile> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteProfile(java.lang.String,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void deleteProfile(String profileId, IZWayCallback<Boolean> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNotifications(de.fh_zwickau.informatik.sensor.IZWayCallback,
+     * java.lang.Long)
+     */
     @Override
     public void getNotifications(IZWayCallback<NotificationList> callback, Long since) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNotification(java.lang.Long,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getNotification(Long notificationId, IZWayCallback<Notification> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.fh_zwickau.informatik.sensor.IZWayApi#putNotification(de.fh_zwickau.informatik.sensor.model.notifications.
+     * Notification, de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void putNotification(Notification notification, IZWayCallback<Notification> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceHistories(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getDeviceHistories(IZWayCallback<DeviceHistoryList> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceHistory(java.lang.String, java.lang.Long,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getDeviceHistory(String deviceId, Long since, IZWayCallback<ArrayList<DeviceHistoryData>> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getIcons(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getIcons(IZWayCallback<IconList> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveDevice(int, de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getZWaveDevice(int nodeId, IZWayCallback<ZWaveDevice> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveController(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
     @Override
     public void getZWaveController(IZWayCallback<ZWaveController> callback) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveDeviceThermostatModeSet(int, int)
+     */
     @Override
     public void getZWaveDeviceThermostatModeSet(int nodeId, int mode) {
         throw new UnsupportedOperationException();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaySessionId()
+     */
     @Override
     public String getZWaySessionId() {
         return mZWaySessionId;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWayRemoteSessionId()
+     */
     @Override
     public String getZWayRemoteSessionId() {
         return mZWayRemoteSessionId;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#cancelCurrentRequest()
+     */
     @Override
     public void cancelCurrentRequest() {
         throw new UnsupportedOperationException();

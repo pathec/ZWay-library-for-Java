@@ -64,6 +64,6 @@ public class ToggleButton extends Device {
      */
     @Override
     public String toString() {
-        return "SwitchControl [ " + super.toString() + " ]";
+        return "ToggleButton [ " + super.toString() + " ]";
     }
 }

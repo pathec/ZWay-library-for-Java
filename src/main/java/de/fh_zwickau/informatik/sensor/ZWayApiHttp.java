@@ -559,7 +559,7 @@ public class ZWayApiHttp extends ZWayApiBase {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getDeviceHistories()
      */
     @Override
@@ -1943,6 +1943,129 @@ public class ZWayApiHttp extends ZWayApiBase {
             mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), false);
             return null;
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getDeviceAsJson(java.lang.String)
+     */
+    @Override
+    public String getDeviceAsJson(String deviceId) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient
+                        .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES + "/" + deviceId)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getDeviceAsJson(deviceId);
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    return response.getContentAsString();
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getDeviceAsJson(deviceId);
+                        }
+                    }
+                } else {
+                    handleException(e, "get device (json)");
+                }
+            } finally {
+                stopHttpClient(mHttpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getDeviceAsJson(java.lang.String,
+     * de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
+    @Override
+    public void getDeviceAsJson(final String deviceId, final IZWayCallback<String> callback) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient
+                        .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES + "/" + deviceId)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
+                        .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                request.send(new BufferingResponseListener() {
+                    @Override
+                    public void onComplete(Result result) {
+                        int statusCode = result.getResponse().getStatus();
+                        if (statusCode != HttpStatus.OK_200) {
+                            if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                                if (getLogin() == null) {
+                                    mCaller.authenticationError();
+                                } else {
+                                    getDeviceAsJson(deviceId, callback);
+                                }
+                            } else {
+                                processResponseStatus(statusCode);
+                            }
+                        } else {
+                            callback.onSuccess(getContentAsString());
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getDeviceAsJson(deviceId, callback);
+                        }
+                    }
+                } else {
+                    handleException(e, "get device");
+                }
+            } finally {
+                // do not stop http client for asynchronous call
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
     }
 
     /*
