@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -322,7 +323,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                 } else {
                     String responseBody = response.getContentAsString();
                     try {
-                        Gson gson = new Gson();
+                        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
                         // Response -> String -> Json -> extract data field
                         JsonObject systemInfoAsJson = gson.fromJson(responseBody, JsonObject.class).get("data")
                                 .getAsJsonObject(); // extract data field
@@ -393,7 +394,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                         } else {
                             String responseBody = getContentAsString();
                             try {
-                                Gson gson = new Gson();
+                                Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
                                 // Response -> String -> Json -> extract data field
                                 JsonObject systemInfoAsJson = gson.fromJson(responseBody, JsonObject.class).get("data")
                                         .getAsJsonObject(); // extract data field
