@@ -28,6 +28,7 @@ import de.fh_zwickau.informatik.sensor.model.notifications.Notification;
 import de.fh_zwickau.informatik.sensor.model.notifications.NotificationList;
 import de.fh_zwickau.informatik.sensor.model.profiles.Profile;
 import de.fh_zwickau.informatik.sensor.model.profiles.ProfileList;
+import de.fh_zwickau.informatik.sensor.model.system.SystemInfo;
 import de.fh_zwickau.informatik.sensor.model.zwaveapi.controller.ZWaveController;
 import de.fh_zwickau.informatik.sensor.model.zwaveapi.devices.ZWaveDevice;
 
@@ -483,6 +484,18 @@ public interface IZWayApi {
      * @return message
      */
     String postIcon(File image);
+
+    /**
+     * @return ZAutomation system info
+     */
+    SystemInfo getSystemInfo();
+
+    /**
+     * Asynchronous version of {@link #getSystemInfo()}
+     *
+     * @param callback contains the same data like synchronous return value
+     */
+    void getSystemInfo(IZWayCallback<SystemInfo> callback);
 
     /**********************
      ****** ZWaveAPI ******

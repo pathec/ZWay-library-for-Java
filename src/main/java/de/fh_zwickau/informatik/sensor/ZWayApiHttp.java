@@ -67,6 +67,7 @@ import de.fh_zwickau.informatik.sensor.model.notifications.NotificationListDeser
 import de.fh_zwickau.informatik.sensor.model.profiles.Profile;
 import de.fh_zwickau.informatik.sensor.model.profiles.ProfileList;
 import de.fh_zwickau.informatik.sensor.model.profiles.ProfileListDeserializer;
+import de.fh_zwickau.informatik.sensor.model.system.SystemInfo;
 import de.fh_zwickau.informatik.sensor.model.zwaveapi.controller.ZWaveController;
 import de.fh_zwickau.informatik.sensor.model.zwaveapi.devices.ZWaveDevice;
 
@@ -248,20 +249,18 @@ public class ZWayApiHttp extends ZWayApiBase {
                         processResponseStatus(statusCode);
                     }
                 } else {
+                    String responseBody = response.getContentAsString();
+                    try {
+                        Gson gson = new Gson();
+                        // Response -> String -> Json -> extract data field
+                        JsonObject profileAsJson = gson.fromJson(responseBody, JsonObject.class).get("data")
+                                .getAsJsonObject(); // extract data field
 
-                }
-
-                String responseBody = response.getContentAsString();
-                try {
-                    Gson gson = new Gson();
-                    // Response -> String -> Json -> extract data field
-                    JsonObject profileAsJson = gson.fromJson(responseBody, JsonObject.class).get("data")
-                            .getAsJsonObject(); // extract data field
-
-                    return new ProfileListDeserializer().deserializeProfile(profileAsJson);
-                } catch (JsonParseException e) {
-                    logger.warn("Unexpected response format: {}", e.getMessage());
-                    mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), true);
+                        return new ProfileListDeserializer().deserializeProfile(profileAsJson);
+                    } catch (JsonParseException e) {
+                        logger.warn("Unexpected response format: {}", e.getMessage());
+                        mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), true);
+                    }
                 }
             } catch (Exception e) {
                 if (e.getCause() instanceof HttpResponseException) {
@@ -283,6 +282,148 @@ public class ZWayApiHttp extends ZWayApiBase {
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getSystemInfo()
+     */
+    @Override
+    public synchronized SystemInfo getSystemInfo() {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_SYSTEM_INFO)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId));
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                ContentResponse response = request.send();
+
+                // Check HTTP status code
+                int statusCode = response.getStatus();
+                if (statusCode != HttpStatus.OK_200) {
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getSystemInfo();
+                        }
+                    } else {
+                        processResponseStatus(statusCode);
+                    }
+                } else {
+                    String responseBody = response.getContentAsString();
+                    try {
+                        Gson gson = new Gson();
+                        // Response -> String -> Json -> extract data field
+                        JsonObject systemInfoAsJson = gson.fromJson(responseBody, JsonObject.class).get("data")
+                                .getAsJsonObject(); // extract data field
+
+                        return gson.fromJson(systemInfoAsJson, SystemInfo.class);
+                    } catch (JsonParseException e) {
+                        logger.warn("Unexpected response format: {}", e.getMessage());
+                        mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), true);
+                    }
+                }
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            return getSystemInfo();
+                        }
+                    }
+                } else {
+                    handleException(e, "get system info");
+                }
+            } finally {
+                stopHttpClient(mHttpClient);
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
+
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getSystemInfo(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
+    @Override
+    public void getSystemInfo(final IZWayCallback<SystemInfo> callback) {
+        if (checkLogin()) {
+            try {
+                startHttpClient(mHttpClient);
+
+                Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_SYSTEM_INFO)
+                        .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
+                        .header(HttpHeader.CONTENT_TYPE, "application/json")
+                        .cookie(new HttpCookie("ZWAYSession", mZWaySessionId))
+                        .onRequestFailure(new ZWayFailureListener());
+
+                if (mUseRemoteService) {
+                    request.cookie(new HttpCookie("ZBW_SESSID", mZWayRemoteSessionId));
+                }
+
+                request.send(new BufferingResponseListener() {
+                    @Override
+                    public void onComplete(Result result) {
+                        int statusCode = result.getResponse().getStatus();
+                        if (statusCode != HttpStatus.OK_200) {
+                            if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                                if (getLogin() == null) {
+                                    mCaller.authenticationError();
+                                } else {
+                                    getSystemInfo(callback);
+                                }
+                            } else {
+                                processResponseStatus(statusCode);
+                            }
+                        } else {
+                            String responseBody = getContentAsString();
+                            try {
+                                Gson gson = new Gson();
+                                // Response -> String -> Json -> extract data field
+                                JsonObject systemInfoAsJson = gson.fromJson(responseBody, JsonObject.class).get("data")
+                                        .getAsJsonObject(); // extract data field
+
+                                callback.onSuccess(gson.fromJson(systemInfoAsJson, SystemInfo.class));
+                            } catch (JsonParseException e) {
+                                logger.warn("Unexpected response format: {}", e.getMessage());
+                                mCaller.responseFormatError("Unexpected response format: " + e.getMessage(), true);
+                            }
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                if (e.getCause() instanceof HttpResponseException) {
+                    int statusCode = ((HttpResponseException) e.getCause()).getResponse().getStatus();
+                    // Authentication error - retry login and operation
+                    if (statusCode == HttpStatus.UNAUTHORIZED_401) {
+                        if (getLogin() == null) {
+                            mCaller.authenticationError();
+                        } else {
+                            getSystemInfo(callback);
+                        }
+                    }
+                } else {
+                    handleException(e, "get system info");
+                }
+            } finally {
+                // do not stop http client for asynchronous call
+            }
+        } // no else ... checkLogin() method will invoke the appropriate callback method
     }
 
     /*
@@ -1947,7 +2088,7 @@ public class ZWayApiHttp extends ZWayApiBase {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getDeviceAsJson(java.lang.String)
      */
     @Override
@@ -2008,7 +2149,7 @@ public class ZWayApiHttp extends ZWayApiBase {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.ZWayApiBase#getDeviceAsJson(java.lang.String,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */

@@ -33,6 +33,7 @@ import de.fh_zwickau.informatik.sensor.model.notifications.Notification;
 import de.fh_zwickau.informatik.sensor.model.notifications.NotificationList;
 import de.fh_zwickau.informatik.sensor.model.profiles.Profile;
 import de.fh_zwickau.informatik.sensor.model.profiles.ProfileList;
+import de.fh_zwickau.informatik.sensor.model.system.SystemInfo;
 import de.fh_zwickau.informatik.sensor.model.zwaveapi.controller.ZWaveController;
 import de.fh_zwickau.informatik.sensor.model.zwaveapi.devices.ZWaveDevice;
 
@@ -356,7 +357,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getStatus()
      */
     @Override
@@ -366,7 +367,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getRestart()
      */
     @Override
@@ -376,7 +377,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getLogin()
      */
     @Override
@@ -386,7 +387,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getCurrentProfile()
      */
     @Override
@@ -396,7 +397,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNamespaces()
      */
     @Override
@@ -406,7 +407,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getModules()
      */
     @Override
@@ -416,7 +417,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getInstances()
      */
     @Override
@@ -426,7 +427,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * de.fh_zwickau.informatik.sensor.IZWayApi#postInstance(de.fh_zwickau.informatik.sensor.model.instances.Instance)
      */
@@ -437,7 +438,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getInstance(java.lang.Integer)
      */
     @Override
@@ -447,7 +448,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * de.fh_zwickau.informatik.sensor.IZWayApi#putInstance(de.fh_zwickau.informatik.sensor.model.instances.Instance)
      */
@@ -458,7 +459,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteInstance(java.lang.Integer)
      */
     @Override
@@ -468,7 +469,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDevices()
      */
     @Override
@@ -478,7 +479,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#putDevice(de.fh_zwickau.informatik.sensor.model.devices.Device)
      */
     @Override
@@ -488,7 +489,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDevice(java.lang.String)
      */
     @Override
@@ -498,7 +499,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceAsJson(java.lang.String)
      */
     @Override
@@ -508,7 +509,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceCommand(de.fh_zwickau.informatik.sensor.model.devices.
      * DeviceCommand)
      */
@@ -519,7 +520,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getLocations()
      */
     @Override
@@ -529,7 +530,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * de.fh_zwickau.informatik.sensor.IZWayApi#postLocation(de.fh_zwickau.informatik.sensor.model.locations.Location)
      */
@@ -540,7 +541,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getLocation(java.lang.String)
      */
     @Override
@@ -550,7 +551,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * de.fh_zwickau.informatik.sensor.IZWayApi#putLocation(de.fh_zwickau.informatik.sensor.model.locations.Location)
      */
@@ -561,7 +562,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteLocation(java.lang.String)
      */
     @Override
@@ -571,7 +572,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getProfiles()
      */
     @Override
@@ -581,7 +582,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#postProfile(de.fh_zwickau.informatik.sensor.model.profiles.Profile)
      */
     @Override
@@ -591,7 +592,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getProfile(java.lang.String)
      */
     @Override
@@ -601,7 +602,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#putProfile(de.fh_zwickau.informatik.sensor.model.profiles.Profile)
      */
     @Override
@@ -611,7 +612,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteProfile(java.lang.String)
      */
     @Override
@@ -621,7 +622,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNotifications(java.lang.Long)
      */
     @Override
@@ -631,7 +632,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNotification(java.lang.Long)
      */
     @Override
@@ -641,7 +642,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * de.fh_zwickau.informatik.sensor.IZWayApi#putNotification(de.fh_zwickau.informatik.sensor.model.notifications.
      * Notification)
@@ -653,7 +654,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceHistories()
      */
     @Override
@@ -663,7 +664,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceHistory(java.lang.String, java.lang.Long)
      */
     @Override
@@ -673,7 +674,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getIcons()
      */
     @Override
@@ -683,7 +684,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#postIcon(java.io.File)
      */
     @Override
@@ -693,7 +694,17 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getSystemInfo()
+     */
+    @Override
+    public SystemInfo getSystemInfo() {
+        throw new UnsupportedOperationException();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveDevice(int)
      */
     @Override
@@ -703,7 +714,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveController()
      */
     @Override
@@ -713,7 +724,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveInclusion(int)
      */
     @Override
@@ -723,7 +734,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveExclusion(int)
      */
     @Override
@@ -733,7 +744,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#updateControllerData(java.lang.String, java.lang.String)
      */
     @Override
@@ -743,7 +754,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getStatus(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -753,7 +764,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getRestart(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -763,7 +774,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNamespaces(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -773,7 +784,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getModules(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -783,7 +794,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getInstances(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -793,7 +804,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * de.fh_zwickau.informatik.sensor.IZWayApi#postInstance(de.fh_zwickau.informatik.sensor.model.instances.Instance,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
@@ -805,7 +816,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getInstance(java.lang.Integer,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -816,7 +827,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * de.fh_zwickau.informatik.sensor.IZWayApi#putInstance(de.fh_zwickau.informatik.sensor.model.instances.Instance,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
@@ -828,7 +839,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteInstance(java.lang.Integer,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -839,7 +850,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDevices(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -849,7 +860,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#putDevice(de.fh_zwickau.informatik.sensor.model.devices.Device,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -860,7 +871,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDevice(java.lang.String,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -871,7 +882,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceAsJson(java.lang.String,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -882,7 +893,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceCommand(de.fh_zwickau.informatik.sensor.model.devices.
      * DeviceCommand, de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -893,7 +904,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getLocations(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -903,7 +914,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * de.fh_zwickau.informatik.sensor.IZWayApi#postLocation(de.fh_zwickau.informatik.sensor.model.locations.Location,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
@@ -915,7 +926,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getLocation(java.lang.String,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -926,7 +937,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * de.fh_zwickau.informatik.sensor.IZWayApi#putLocation(de.fh_zwickau.informatik.sensor.model.locations.Location,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
@@ -938,7 +949,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteLocation(java.lang.String,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -949,7 +960,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getProfiles(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -959,7 +970,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#postProfile(de.fh_zwickau.informatik.sensor.model.profiles.Profile,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -970,7 +981,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getProfile(java.lang.String,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -981,7 +992,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#putProfile(de.fh_zwickau.informatik.sensor.model.profiles.Profile,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -992,7 +1003,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#deleteProfile(java.lang.String,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -1003,7 +1014,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNotifications(de.fh_zwickau.informatik.sensor.IZWayCallback,
      * java.lang.Long)
      */
@@ -1014,7 +1025,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getNotification(java.lang.Long,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -1025,7 +1036,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * de.fh_zwickau.informatik.sensor.IZWayApi#putNotification(de.fh_zwickau.informatik.sensor.model.notifications.
      * Notification, de.fh_zwickau.informatik.sensor.IZWayCallback)
@@ -1037,7 +1048,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceHistories(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -1047,7 +1058,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getDeviceHistory(java.lang.String, java.lang.Long,
      * de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
@@ -1058,7 +1069,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getIcons(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -1068,7 +1079,17 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
+     * @see de.fh_zwickau.informatik.sensor.IZWayApi#getSystemInfo(de.fh_zwickau.informatik.sensor.IZWayCallback)
+     */
+    @Override
+    public void getSystemInfo(IZWayCallback<SystemInfo> callback) {
+        throw new UnsupportedOperationException();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveDevice(int, de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -1078,7 +1099,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveController(de.fh_zwickau.informatik.sensor.IZWayCallback)
      */
     @Override
@@ -1088,7 +1109,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaveDeviceThermostatModeSet(int, int)
      */
     @Override
@@ -1098,7 +1119,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWaySessionId()
      */
     @Override
@@ -1108,7 +1129,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#getZWayRemoteSessionId()
      */
     @Override
@@ -1118,7 +1139,7 @@ public abstract class ZWayApiBase implements IZWayApi, IDeviceCommands {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see de.fh_zwickau.informatik.sensor.IZWayApi#cancelCurrentRequest()
      */
     @Override

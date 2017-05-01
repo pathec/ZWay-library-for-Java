@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.2.8] - 2017-05-01
+### Added
+- Z-Way API function (getSystemInfo) to load current firmware version
+
 ## [0.2.7] - 2017-04-09
 ### Added
 - Sensor discrete device type

@@ -27,6 +27,7 @@ public class ZWayConstants {
     public static final String PATH_NOTIFICATIONS = "notifications";
     public static final String PATH_DEVICE_HISTORY = "history";
     public static final String PATH_ICONS = "icons";
+    public static final String PATH_SYSTEM_INFO = "system/info";
 
     public static final String REMOTE_PATH_LOGIN = "zboxweb";
 
