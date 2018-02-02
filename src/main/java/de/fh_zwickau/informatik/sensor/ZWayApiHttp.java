@@ -102,13 +102,7 @@ public class ZWayApiHttp extends ZWayApiBase {
 
         super(ipAddress, port, protocol, username, password, remoteId, useRemoteService, caller);
 
-        if (protocol.equals("http")) {
-            mHttpClient = new HttpClient();
-        } else if (protocol.equals("https")) {
-            mHttpClient = new HttpClient(new SslContextFactory());
-        }
-
-        mHttpClient.setConnectTimeout(HTTP_CLIENT_TIMEOUT);
+        initHttpClient();
     }
 
     /*
@@ -119,7 +113,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     @Override
     public synchronized String getLogin() {
         try {
-            startHttpClient(mHttpClient);
+            startHttpClient();
 
             if (mUseRemoteService) {
                 mZWaySessionId = null;
@@ -202,7 +196,7 @@ public class ZWayApiHttp extends ZWayApiBase {
             logger.warn("Request getLogin() failed: {}", e.getMessage());
             mCaller.apiError(e.getMessage(), true);
         } finally {
-            stopHttpClient(mHttpClient);
+            stopHttpClient();
         }
 
         mZWaySessionId = null;
@@ -220,7 +214,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized Profile getCurrentProfile() {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 // Build request body
                 LoginForm loginForm = new LoginForm(true, mUsername, mPassword, false, 1);
@@ -278,7 +272,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get current profile");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -294,7 +288,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized SystemInfo getSystemInfo() {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_SYSTEM_INFO)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -349,7 +343,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get system info");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -365,7 +359,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getSystemInfo(final IZWayCallback<SystemInfo> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_SYSTEM_INFO)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -436,7 +430,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized InstanceList getInstances() {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -480,7 +474,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get instances");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -496,7 +490,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getInstances(final IZWayCallback<InstanceList> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -572,7 +566,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized LocationList getLocations() {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_LOCATIONS)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -616,7 +610,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get locations");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -632,7 +626,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getLocations(final IZWayCallback<LocationList> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -708,7 +702,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized DeviceHistoryList getDeviceHistories() {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICE_HISTORY)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -752,7 +746,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get device histories");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -769,7 +763,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getDeviceHistories(final IZWayCallback<DeviceHistoryList> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICE_HISTORY)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -847,7 +841,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized ArrayList<DeviceHistoryData> getDeviceHistory(String deviceId, Long since) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICE_HISTORY + "/" + deviceId + "?since="
@@ -893,7 +887,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get device history");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -911,7 +905,7 @@ public class ZWayApiHttp extends ZWayApiBase {
             final IZWayCallback<ArrayList<DeviceHistoryData>> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICE_HISTORY + "/" + deviceId + "?since="
@@ -994,7 +988,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized ProfileList getProfiles() {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_PROFILES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -1038,7 +1032,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get profiles");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -1054,7 +1048,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getProfiles(final IZWayCallback<ProfileList> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_PROFILES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -1130,7 +1124,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized NotificationList getNotifications(Long since) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_NOTIFICATIONS + "?since=" + since)
@@ -1175,7 +1169,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get notifications");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -1191,7 +1185,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getNotifications(final IZWayCallback<NotificationList> callback, final Long since) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_NOTIFICATIONS + "?since=" + since)
@@ -1269,7 +1263,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized Instance getInstance(Integer id) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES + "/" + id)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -1313,7 +1307,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get instance");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -1330,7 +1324,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getInstance(final Integer id, final IZWayCallback<Instance> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES + "/" + id)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -1408,7 +1402,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized Instance putInstance(Instance instance) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES + "/" + instance.getId())
@@ -1454,7 +1448,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "put instance");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -1472,7 +1466,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void putInstance(final Instance instance, final IZWayCallback<Instance> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES + "/" + instance.getId())
@@ -1553,7 +1547,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized Instance postInstance(Instance instance) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
                         .method(HttpMethod.POST).header(HttpHeader.ACCEPT, "application/json")
@@ -1598,7 +1592,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "post instance");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -1617,7 +1611,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void postInstance(final Instance instance, final IZWayCallback<Instance> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES)
                         .method(HttpMethod.POST).header(HttpHeader.ACCEPT, "application/json")
@@ -1698,7 +1692,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized Boolean deleteInstance(Integer id) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES + "/" + id)
                         .method(HttpMethod.DELETE).header(HttpHeader.ACCEPT, "application/json")
@@ -1742,7 +1736,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "delete instance");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -1759,7 +1753,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void deleteInstance(final Integer id, final IZWayCallback<Boolean> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES + "/" + id)
                         .method(HttpMethod.DELETE).header(HttpHeader.ACCEPT, "application/json")
@@ -1819,7 +1813,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized DeviceList getDevices() {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -1863,7 +1857,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get devices");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -1879,7 +1873,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getDevices(final IZWayCallback<DeviceList> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -1957,7 +1951,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized Device getDevice(String deviceId) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES + "/" + deviceId)
@@ -2002,7 +1996,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get device");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -2019,7 +2013,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getDevice(final String deviceId, final IZWayCallback<Device> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES + "/" + deviceId)
@@ -2096,7 +2090,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public String getDeviceAsJson(String deviceId) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES + "/" + deviceId)
@@ -2141,7 +2135,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get device (json)");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -2158,7 +2152,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getDeviceAsJson(final String deviceId, final IZWayCallback<String> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES + "/" + deviceId)
@@ -2219,7 +2213,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized Device putDevice(Device device) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_DEVICES + "/" + device.getDeviceId())
@@ -2265,7 +2259,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "put device");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -2282,7 +2276,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void putDevice(final Device device, final IZWayCallback<Device> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient
                         .newRequest(getZAutomationTopLevelUrl() + "/" + PATH_INSTANCES + "/" + device.getDeviceId())
@@ -2362,7 +2356,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized String getDeviceCommand(DeviceCommand command) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 String path = buildGetDeviceCommandPath(command);
                 if (path == null) {
@@ -2412,7 +2406,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get device command");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -2429,7 +2423,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getDeviceCommand(final DeviceCommand command, final IZWayCallback<String> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 String path = buildGetDeviceCommandPath(command);
                 if (path == null) {
@@ -2542,7 +2536,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized IconList getIcons() {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_ICONS)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -2586,7 +2580,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get icons");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -2602,7 +2596,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getIcons(final IZWayCallback<IconList> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZAutomationTopLevelUrl() + "/" + PATH_ICONS)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -2673,7 +2667,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public String postIcon(File image) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 MultiPartContentProvider multiPart = new MultiPartContentProvider();
                 multiPart.addFilePart("file", image.getName(), new PathContentProvider(Paths.get(image.getPath())),
@@ -2721,7 +2715,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get post icon");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -2741,7 +2735,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized ZWaveDevice getZWaveDevice(int nodeId) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 String path = URLEncoder
                         .encode(StringUtils.replace(ZWAVE_PATH_DEVICES, "{nodeId}", String.valueOf(nodeId)), "UTF-8");
@@ -2788,7 +2782,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get zwave device");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -2805,7 +2799,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getZWaveDevice(final int nodeId, final IZWayCallback<ZWaveDevice> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 String path = URLEncoder
                         .encode(StringUtils.replace(ZWAVE_PATH_DEVICES, "{nodeId}", String.valueOf(nodeId)), "UTF-8");
@@ -2882,7 +2876,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized ZWaveController getZWaveController() {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZWaveTopLevelUrl() + "/" + ZWAVE_PATH_CONTROLLER)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -2926,7 +2920,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get zwave controller");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
 
@@ -2943,7 +2937,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getZWaveController(final IZWayCallback<ZWaveController> callback) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 Request request = mHttpClient.newRequest(getZWaveTopLevelUrl() + "/" + ZWAVE_PATH_CONTROLLER)
                         .method(HttpMethod.GET).header(HttpHeader.ACCEPT, "application/json")
@@ -3017,7 +3011,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized void getZWaveInclusion(int flag) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 String path = URLEncoder
                         .encode(StringUtils.replace(ZWAVE_PATH_INCLUSION, "{flag}", String.valueOf(flag)), "UTF-8");
@@ -3064,7 +3058,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get zwave inclusion");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
@@ -3078,7 +3072,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public synchronized void getZWaveExclusion(int flag) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 String path = URLEncoder
                         .encode(StringUtils.replace(ZWAVE_PATH_EXCLUSION, "{flag}", String.valueOf(flag)), "UTF-8");
@@ -3125,7 +3119,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get zwave exclusion");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
@@ -3134,7 +3128,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void updateControllerData(String field, String value) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 String path = URLEncoder.encode(ZWAVE_PATH_CONTROLLER_DATA + "." + field + "=" + value, "UTF-8");
 
@@ -3181,7 +3175,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     mCaller.apiError(e.getMessage(), false);
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
@@ -3190,7 +3184,7 @@ public class ZWayApiHttp extends ZWayApiBase {
     public void getZWaveDeviceThermostatModeSet(int nodeId, int mode) {
         if (checkLogin()) {
             try {
-                startHttpClient(mHttpClient);
+                startHttpClient();
 
                 String path = URLEncoder.encode(
                         StringUtils.replace(ZWAVE_PATH_DEVICES_CC_THERMOSTAT_SET, "{nodeId}", String.valueOf(nodeId))
@@ -3239,7 +3233,7 @@ public class ZWayApiHttp extends ZWayApiBase {
                     handleException(e, "get zwave device thermostat mode set");
                 }
             } finally {
-                stopHttpClient(mHttpClient);
+                stopHttpClient();
             }
         } // no else ... checkLogin() method will invoke the appropriate callback method
     }
@@ -3248,20 +3242,30 @@ public class ZWayApiHttp extends ZWayApiBase {
      ****** Utility ******
      ********************/
 
-    private synchronized void startHttpClient(HttpClient client) {
-        if (!client.isStarted()) {
+    private synchronized void initHttpClient() {
+        if (mProtocol.equals("http")) {
+            mHttpClient = new HttpClient();
+        } else if (mProtocol.equals("https")) {
+            mHttpClient = new HttpClient(new SslContextFactory());
+        }
+        mHttpClient.setConnectTimeout(HTTP_CLIENT_TIMEOUT);
+    }
+
+    private synchronized void startHttpClient() {
+        initHttpClient();
+        if (!mHttpClient.isStarted()) {
             try {
-                client.start();
+                mHttpClient.start();
             } catch (Exception e) {
                 logger.warn("Can not start HttpClient !", e);
             }
         }
     }
 
-    private synchronized void stopHttpClient(HttpClient client) {
-        if (client.isStarted()) {
+    private synchronized void stopHttpClient() {
+        if (mHttpClient.isStarted()) {
             try {
-                client.stop();
+                mHttpClient.stop();
             } catch (Exception e) {
                 logger.error("Unable to stop HttpClient !", e);
             }
